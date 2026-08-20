@@ -8,6 +8,12 @@ Muat `AGENTS.md` di setiap sesi. Jangan pernah memuat seluruh `docs/` sekaligus.
 
 Estimasi memakai satuan **sesi** (± 1–3 jam kerja terfokus), bukan hari, karena kecepatan sangat bergantung alat.
 
+## Status eksekusi — 21 Agustus 2026
+
+- **T0.1 selesai** di commit `2e7a5ab`: dependensi ter-resolve dan `pnpm-lock.yaml` tersedia.
+- **T0.2 implementasi tersedia** di commit `3a9a281`: boilerplate Next.js/Payload sudah dipasang. Tiket belum ditutup sampai `/admin` memuat halaman login sesuai verifikasi tiket.
+- Tiket aktif berikutnya tetap **T0.2 (verifikasi)**, lalu T0.3. Keberadaan berkas bukan pengganti gerbang verifikasi.
+
 ---
 
 ## Fase 0 — Fondasi (5 tiket)
@@ -123,7 +129,7 @@ T5.1 isi 12 arsip + 5 cerita + 20 direktori (**kerja PIHAK PERTAMA**, mulai para
 | Dokumen dan kode menyimpang | Setiap tiket melaporkan dokumen yang perlu diperbarui |
 | Zip lama tercampur zip baru | Satu sumber kebenaran: repo Git, bukan folder unduhan |
 
-## Langkah pertama, hari ini
-1. Hapus semua zip lama. Ekstrak **hanya** yang terbaru.
-2. `git init && git add -A && git commit -m "chore: scaffold awal"` lalu push ke `github.com/novis97/arsip-hidup` (privat).
-3. Mulai T0.1. Jangan buka tiket lain.
+## Langkah berikutnya
+1. Isi rahasia lokal yang diperlukan berdasarkan `.env.example`; jangan commit `.env`.
+2. Verifikasi T0.2 dengan menjalankan `pnpm dev:cms` dan membuka `http://localhost:3000/admin`.
+3. Jika halaman login berhasil dimuat, tutup T0.2 dan mulai T0.3. Jangan buka tiket lain.

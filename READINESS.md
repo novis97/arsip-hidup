@@ -1,12 +1,12 @@
 # READINESS — apakah repo ini siap dieksekusi agent AI?
 
-Diperiksa 20 Agustus 2026, terhadap registry npm yang sesungguhnya.
+Diperiksa 21 Agustus 2026 terhadap worktree lokal dan remote Git terakhir.
 
 ## Jawaban singkat
 
-**Belum bisa dijalankan hari ini. Sudah bisa dikerjakan hari ini.**
+**Dependensi sudah dikunci dan boilerplate Payload sudah tersedia. Verifikasi runtime T0.2 masih harus diselesaikan.**
 
-Bedanya penting. `pnpm dev` akan gagal — boilerplate Next.js untuk Payload 3 belum ada dan lockfile belum dihasilkan. Tapi rencana kerjanya sudah cukup rinci untuk agent mulai dari T0.1 tanpa mengarang.
+`pnpm-lock.yaml` dihasilkan pada commit `2e7a5ab`. Boilerplate Next.js/Payload dipasang pada commit `3a9a281`. Keberadaan berkas tidak otomatis menutup T0.2: halaman login `/admin` tetap harus dimuat dengan konfigurasi lokal yang valid.
 
 ---
 
@@ -18,10 +18,12 @@ Bedanya penting. `pnpm dev` akan gagal — boilerplate Next.js untuk Payload 3 b
 | 12 uji unit media (token, HLS, path traversal) lolos | ✅ dijalankan, hijau |
 | CSP mencakup `www.youtube.com` di `script-src` | ✅ dicek gate |
 | Semua paket ada di npm | ✅ 15/15 |
-| Versi dependensi sesuai registry | ✅ **dikoreksi hari ini — lihat di bawah** |
+| Versi dependensi sesuai registry | ✅ dikoreksi 20 Agustus 2026 — lihat di bawah |
 | Peer dependency Payload↔Next dipatuhi | ✅ |
 | Aturan privasi/consent ditegakkan kode, bukan SOP | ✅ |
 | Tiket kerja beserta konteks & verifikasi | ✅ 32 tiket |
+| `pnpm-lock.yaml` | ✅ tersedia (`2e7a5ab`) |
+| Boilerplate Next.js/Payload | ✅ berkas tersedia (`3a9a281`); runtime belum diverifikasi |
 
 ## Koreksi yang baru ditemukan saat verifikasi
 
@@ -39,18 +41,17 @@ Ini bukan catatan kaki. Ini bukti langsung bahwa aturan anti-halusinasi di `AGEN
 
 ---
 
-## Yang akan menghentikan agent di 30 menit pertama
+## Yang masih memerlukan tindakan
 
 | Penghambat | Tiket | Bisa diselesaikan agent sendiri? |
 |---|---|---|
-| Tidak ada `pnpm-lock.yaml` / `node_modules` | T0.1 | Ya |
-| Boilerplate Next.js Payload 3 belum ada | T0.2 | Ya, tapi harus jalankan `create-payload-app` — **tidak boleh dikarang** |
+| Halaman login `/admin` belum diverifikasi dengan konfigurasi lokal | T0.2 | Ya, setelah rahasia lokal tersedia |
 | `PAYLOAD_SECRET`, kredensial R2, `AUDIT_HASH_SALT` kosong | — | **Tidak.** Butuh manusia |
 | Akun R2 & VPS belum dibeli | G-3 | **Tidak.** Butuh Addendum I lebih dulu |
 | `sameAs` di schema Organization kosong | T4.2 | Tidak — butuh URL profil nyata |
 | API Astro 7 berbeda dari yang saya tulis | T1.2–T1.6 | Ya, setelah T0.1 tipe bisa dibaca |
 
-Baris terakhir jujur: `astro.config.mjs` dan berkas `.astro` di repo ini ditulis untuk Astro 5. Astro 7 kemungkinan mengubah sebagian API. **Anggap berkas `.astro` sebagai rancangan yang benar secara struktur, bukan kode yang pasti kompilasi.** Berkas Payload dan library media (`lib/*.ts`, `endpoints/*.ts`) jauh lebih aman karena hanya memakai API yang stabil.
+Baris terakhir jujur: scaffold `.astro` berasal dari rancangan awal sebelum dependensi Astro 7 dikunci. **Baca tipe Astro 7 dan jalankan `astro check`; jangan menganggap sintaksnya pasti kompatibel hanya karena berkasnya ada.** Berkas Payload dan library media (`lib/*.ts`, `endpoints/*.ts`) lebih matang, tetapi tetap harus melewati gate tiketnya.
 
 ---
 
@@ -62,25 +63,19 @@ Baris terakhir jujur: `astro.config.mjs` dan berkas `.astro` di repo ini ditulis
 | `apps/cms/src/collections/*` | **Tinggi** | API Payload 3 stabil; validasi & hook sudah teruji bentuknya |
 | `infra/*`, `.github/workflows/*`, skrip shell | **Tinggi** | Tidak bergantung versi framework |
 | `apps/web/src/components/player/arsip-player.ts` | **Tinggi** | TypeScript murni, tidak menyentuh API Astro |
-| `apps/web/**/*.astro`, `astro.config.mjs` | **Sedang** | Ditulis untuk Astro 5; sesuaikan ke 7 di T1.2 |
+| `apps/web/**/*.astro`, `astro.config.mjs` | **Sedang** | Scaffold mendahului penguncian Astro 7; verifikasi tipe/API di T1.2 |
 | `docs/*` | **Tinggi** | Keputusan arsitektural, bukan sintaks |
 
 ---
 
-## Cara memulai yang benar
+## Langkah berikutnya
 
-```bash
-unzip arsip-hidup-v1.zip && cd arsip-hidup
-git init && git add -A && git commit -m "chore: scaffold awal"
-# push ke github.com/novis97/arsip-hidup (PRIVAT)
-```
+Pastikan `.env` lokal diisi oleh manusia berdasarkan `.env.example`, lalu buka sesi berikut dengan prompt:
 
-Lalu buka sesi coding pertama dengan prompt persis seperti ini:
+> Baca `AGENTS.md` dan `BUILD_PLAN.md`. Kerjakan **hanya verifikasi tiket T0.2**.
+> Jalankan CMS dan buktikan `/admin` memuat halaman login. Jangan sentuh T0.3.
 
-> Baca `AGENTS.md` dan `BUILD_PLAN.md`. Kerjakan **hanya tiket T0.1**.
-> Jangan sentuh tiket lain. Laporkan versi apa saja yang tidak ter-resolve.
-
-Setelah T0.1 hijau, barulah agent punya tipe untuk dibaca — dan mulai dari titik itu, kualitas keluarannya akan meningkat tajam.
+Setelah T0.2 benar-benar lolos, lanjutkan T0.3. Dua commit lokal fondasi belum berada pada remote-tracking `origin/dev`; push adalah tindakan terpisah dan tidak tersirat oleh status ini.
 
 ## Empat hal yang tidak boleh diserahkan ke agent
 

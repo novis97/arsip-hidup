@@ -45,10 +45,10 @@ Jangan lakukan hal-hal berikut, meski terlihat menyelesaikan masalah:
 
 ## 4. Aturan anti-halusinasi
 
-Payload 3 dan Astro 5 punya permukaan API yang berubah cepat, dan ini area paling rawan karangan.
+Payload 3 dan Astro 7 punya permukaan API yang berubah cepat, dan ini area paling rawan karangan.
 
 - **Jangan menebak nama API.** Kalau tidak yakin bentuk sebuah fungsi Payload/Astro, baca tipenya di `node_modules/payload/dist/**/*.d.ts` atau dokumentasi resminya. Menebak lalu "memperbaiki error" berulang kali adalah cara paling cepat merusak berkas yang tadinya benar.
-- **Jangan berpindah versi mayor** (Payload 2 → 3, Astro 4 → 5) untuk menyelesaikan error. Versi sudah dipilih; error impor biasanya salah path, bukan salah versi.
+- **Jangan berpindah versi mayor** (misalnya Payload 2 → 3 atau Astro 6 → 7) untuk menyelesaikan error. Versi sudah dipilih; error impor biasanya salah path, bukan salah versi.
 - **Kalau sebuah paket tidak ada**, laporkan. Jangan gantikan dengan paket lain yang mirip namanya.
 - **Kalau instruksi tiket bertabrakan dengan `docs/`**, dokumen menang. Laporkan tabrakannya.
 - **Satu tiket, satu sesi.** Jangan mengerjakan tiket berikutnya karena "sekalian".

@@ -1,5 +1,15 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## Penyelarasan pra-implementasi — 21 Agustus 2026
+
+- Versi front-end diselaraskan ke dependensi aktual: Astro 7.2.4, bukan Astro 5.
+- Status fondasi diperbarui: T0.1 selesai; berkas T0.2 tersedia tetapi verifikasi halaman login `/admin` masih wajib.
+- Diagram pemutar internal memakai nama `R2Hls`, bukan sisa istilah `MinioHls`.
+- Facet Jelajah ditetapkan menjadi tema, wilayah, periode, bahasa, jenis materi, dan narasumber; kata kunci tetap berada di pencarian.
+- Definition of Done menu sekarang menyebut tujuan navigasi secara eksplisit, bukan hitungan yang ambigu.
+- Lokasi komponen pemutar diselaraskan ke `apps/web/src/components/player/`; workspace `packages/ui` tidak digunakan.
+- `READINESS.md` dan `SCAFFOLD_NOTES.md` diselaraskan dengan kondisi worktree setelah commit `2e7a5ab` dan `3a9a281`.
+
 ## v0.3 — 20 Agustus 2026
 **Keputusan: stack final ditetapkan (G-2 ditutup).**
 

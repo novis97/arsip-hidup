@@ -1,6 +1,13 @@
 # Catatan Scaffold — apa yang nyata, apa yang stub
 
-Dibuat 20 Agustus 2026. Dokumen ini sengaja jujur agar tidak ada yang mengira repo ini sudah bisa dijalankan produksi.
+Dibuat 20 Agustus 2026; status diperbarui 21 Agustus 2026. Dokumen ini sengaja jujur agar tidak ada yang mengira keberadaan scaffold sama dengan kesiapan produksi.
+
+## Fondasi yang sekarang tersedia
+
+| Berkas | Status |
+|---|---|
+| `pnpm-lock.yaml` | **Ada.** Dihasilkan pada T0.1 (`2e7a5ab`). |
+| `apps/cms/src/app/(payload)/**`, konfigurasi Next.js, dan tipe Payload | **Ada.** Dipasang pada T0.2 (`3a9a281`); `/admin` masih harus diverifikasi sebelum tiket ditutup. |
 
 ## Sudah lengkap dan siap dipakai
 | Berkas | Status |
@@ -23,14 +30,13 @@ Dibuat 20 Agustus 2026. Dokumen ini sengaja jujur agar tidak ada yang mengira re
 | `Stories`, `BatikBusinesses`, `Themes`, `Locations`, `TimelineEvents`, `ColorMapEntries`, `AccessRequests` | Fase 2–3 | Hanya `title` + `slug`. Field lengkap ada di `docs/SCHEMA.md` |
 | Halaman pemutar terbatas di aplikasi Payload (`/arsip/…`) | Fase 3 | Endpoint-nya sudah siap; UI hls.js + overlay watermark + logika refresh sesi belum dibuat |
 | Halaman `/jelajah`, `/direktori`, `/peta-warna`, `/linimasa`, `/tentang/*` | Fase 2–3 | |
-| Boilerplate Next.js untuk Payload 3 | Sebelum `pnpm dev` pertama | Jalankan `npx create-payload-app@latest` di direktori kosong, lalu pindahkan `src/app/(payload)` ke `apps/cms`. Payload 3 berjalan di dalam Next.js; file konfigurasi dan koleksi di repo ini tinggal dipasang |
-| `pnpm-lock.yaml` | Instalasi pertama | Belum ada karena dependensi belum pernah di-resolve di lingkungan ini |
 
-## Yang harus diselesaikan sebelum baris kode berikutnya
-1. **G-3 — Addendum I.** Selesaikan sebelum VPS dibeli. Biaya berjalan tiap bulan; menagih belakangan menempatkan Anda pada posisi lemah.
-2. **G-6 — siapa mengoreksi transkrip.** Perkiraan realistis 3–5× durasi rekaman untuk bahasa campuran Indonesia–Jawa. Tanpa ini, aset SEO/GEO terbesar situs tidak pernah ada.
-3. **G-7 — kepemilikan akun.** Domain, VPS, Cloudflare, R2, YouTube atas nama PIHAK PERTAMA.
-4. **Uji abandon** (gerbang keluar Fase 0): matikan VPS, pastikan seluruh halaman publik tetap tersaji.
+## Yang harus diselesaikan berikutnya
+1. **T0.2 — verifikasi runtime.** Jalankan CMS dengan rahasia lokal yang valid dan buktikan `/admin` memuat halaman login.
+2. **G-3 — Addendum I.** Selesaikan sebelum VPS dibeli. Biaya berjalan tiap bulan; menagih belakangan menempatkan Anda pada posisi lemah.
+3. **G-6 — siapa mengoreksi transkrip.** Perkiraan realistis 3–5× durasi rekaman untuk bahasa campuran Indonesia–Jawa. Tanpa ini, aset SEO/GEO terbesar situs tidak pernah ada.
+4. **G-7 — kepemilikan akun.** Domain, VPS, Cloudflare, R2, YouTube atas nama PIHAK PERTAMA.
+5. **Uji abandon** (gerbang keluar Fase 0): matikan VPS, pastikan seluruh halaman publik tetap tersaji.
 
 ## Deviasi dari blueprint
-`packages/ui` tidak dibuat; komponen pemutar berada di `apps/web/src/components/player/`. Alasan: impor lintas-workspace ke berkas `.astro` menambah friksi konfigurasi tanpa manfaat pada satu aplikasi front-end. `DEVOPS.md` §2 perlu disesuaikan bila deviasi ini disetujui.
+`packages/ui` tidak dibuat; komponen pemutar berada di `apps/web/src/components/player/`. Alasan: impor lintas-workspace ke berkas `.astro` menambah friksi konfigurasi tanpa manfaat pada satu aplikasi front-end. `DEVOPS.md` telah diselaraskan dengan keputusan ini pada 21 Agustus 2026.

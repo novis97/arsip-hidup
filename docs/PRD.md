@@ -1,5 +1,5 @@
 # PRD — Website Arsip Hidup Indonesia
-**Versi:** 0.3 · **Tanggal:** 20 Agustus 2026 · **Repo:** github.com/novis97/arsip-hidup · **Owner:** novis97@gmail.com
+**Versi:** 0.4 · **Tanggal:** 21 Agustus 2026 · **Repo:** github.com/novis97/arsip-hidup · **Owner:** novis97@gmail.com
 **Status:** B-1 SELESAI. B-2..B-5 masih terbuka. Scaffolding disetujui untuk dimulai dengan asumsi tercatat di Bagian 0.
 
 ---
@@ -95,7 +95,7 @@ Kalimat di atas adalah definisi entitas resmi. Dipakai identik di `<meta descrip
 |---|---|---|---|
 | 01 | Tentang | `/tentang` | Sub: Cerita Kami, Kenapa Sejarah Lisan, Public History & Shared Authority, Tim, Metodologi, Etika, Mitra, FAQ |
 | 02 | Koleksi | `/koleksi` | Index proyek. Fase 1 hanya `batik-tulis-pekalongan` |
-| 03 | Jelajah | `/jelajah` | **Keputusan atas pertanyaan terbuka di dokumen:** ini adalah *faceted browse*, bukan halaman terpisah berisi peta demografi. Facet: tema, wilayah, periode, narasumber, jenis materi, kata kunci. Peta demografi jadi salah satu *view* di dalamnya. Alasan SEO: lihat SEO.md §6 (crawl trap) |
+| 03 | Jelajah | `/jelajah` | **Keputusan atas pertanyaan terbuka di dokumen:** ini adalah *faceted browse*, bukan halaman terpisah berisi peta demografi. Facet: tema, wilayah, periode, bahasa, jenis materi, narasumber. Kata kunci ditangani oleh pencarian, bukan facet kategorikal. Peta demografi jadi salah satu *view* di dalamnya. Alasan SEO: lihat SEO.md §6 (crawl trap) |
 | 04 | Cerita | `/cerita` | Editorial hasil interpretasi arsip. Contoh dokumen: "Ketika Air Rob Datang" |
 | 05 | Belajar | `/belajar` | **Tidak dibangun Fase 1.** Tidak ada di nav. Tidak ada halaman kosong "coming soon" (halaman tipis merusak SEO) |
 | 06 | Berpartisipasi | `/terlibat` | Volunteer, Partner, Donasi, Submit Cerita, Usul Narasumber, Rekomendasi Karya |
@@ -199,7 +199,7 @@ ID sebagai default, EN sebagai terjemahan opsional per-entitas. Struktur URL `/e
 | Perpanjangan tahun ke-2 tidak dibayar | Situs & domain hilang (PKS Pasal 11.7) | Dana operasional tahunan masuk rencana keberlanjutan, bukan urusan developer |
 
 ## 9. Definition of Done (Fase 1)
-- 9 menu terbangun sesuai §4 (Belajar dikecualikan)
+- Tujuan navigasi Fase 1 terbangun: Tentang, Koleksi, Jelajah, Cerita, Terlibat, Berita, dan Kontak; pencarian tersedia sebagai kontrol navigasi. Belajar dikecualikan, sedangkan Rekomendasi Karya berada di `/terlibat#rekomendasi-karya`.
 - Alur permintaan akses berjalan end-to-end
 - Video façade lolos uji: 0 request ke domain Google sebelum Play (dibuktikan lewat HAR)
 - Semua halaman arsip punya `VideoObject` schema valid + transkrip HTML

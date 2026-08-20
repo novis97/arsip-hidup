@@ -55,7 +55,7 @@ arsip-hidup/
 - `dev` = integrasi → auto-deploy ke staging.
 - `feat/*`, `fix/*`, `chore/*`. Squash merge.
 - Conventional Commits; tag `v0.x.y`.
-- CODEOWNERS untuk `infra/`, `docs/`, dan `packages/ui/ArsipPlayer` — komponen pemutar tidak boleh diubah tanpa review.
+- CODEOWNERS untuk `infra/`, `docs/`, dan `apps/web/src/components/player/` — komponen pemutar tidak boleh diubah tanpa review. Komponen sengaja berada di aplikasi web karena hanya ada satu front-end; tidak ada workspace `packages/ui`.
 - **Repo privat sampai go-live.** Setelah itu, pertimbangkan membuka kodenya (bukan datanya) — arsip publik yang kodenya terbuka mendapat kepercayaan dan kontribusi. Tapi audit dulu riwayat commit untuk secret yang pernah ter-commit.
 
 ## 4. CI/CD (GitHub Actions)

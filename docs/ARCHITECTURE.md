@@ -1,5 +1,5 @@
 # ARCHITECTURE — Arsip Hidup Indonesia
-**Versi:** 0.4 · **20 Agustus 2026** · Stack final: Payload 3 + SQLite + Astro SSG + Cloudflare R2.
+**Versi:** 0.4 · **21 Agustus 2026** · Stack final: Payload 3 + SQLite + Astro 7 SSG + Cloudflare R2.
 
 ---
 
@@ -78,7 +78,7 @@ Ini harus direncanakan sekarang, bukan saat terjadi:
 | Lapis | Teknologi | Alasan |
 |---|---|---|
 | Edge | Cloudflare | WAF, rate limit, cache, bot management. Wajib dicek: preset bot Cloudflare dapat memblokir crawler AI — lihat GEO.md §5 |
-| Front-end publik | Astro 5 (SSG), islands untuk peta/player/filter | HTML nyata by default; JS hanya di komponen yang perlu |
+| Front-end publik | Astro 7 (SSG), islands untuk peta/player/filter | HTML nyata by default; JS hanya di komponen yang perlu |
 | CMS/API | Payload 3 (Node 22), Docker | Admin UI siap pakai, auth email+password+MFA bawaan, akses kontrol per-field, model konten = sumber kebenaran skema |
 | Database | SQLite (Drizzle via `@payloadcms/db-sqlite`) | Satu file. Backup = salin file. Tanpa layanan tambahan. FTS5 untuk pencarian transkrip |
 | Object storage | Cloudflare R2 (S3 API) | Presigned URL berbatas waktu = kontrol akses nyata untuk tier TERBATAS. Tanpa egress fee, terpisah dari server aplikasi |
@@ -100,7 +100,7 @@ Ini bagian yang paling sering dibangun salah. Spesifikasi implementasi di `VIDEO
                                   |
                     +-------------+--------------+
                     |             |              |
-              YouTubeFacade   MinioHls     DownloadOnly
+              YouTubeFacade    R2Hls       DownloadOnly
               (tier PUBLIK)  (tier TERBATAS)  (fallback)
 ```
 Halaman **tidak pernah** memanggil YouTube langsung. Halaman memanggil `<ArsipPlayer>`, yang membaca `video_source` dari data dan memilih backend. Konsekuensi praktis: kalau YouTube mengubah kebijakan lagi (dan mereka sudah melakukannya dua kali — `showinfo` 2018, `modestbranding` 2023), yang diganti satu komponen, bukan ratusan halaman.
