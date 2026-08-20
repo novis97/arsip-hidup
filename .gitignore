@@ -1,0 +1,34 @@
+node_modules/
+dist/
+.astro/
+.next/
+build/
+*.log
+
+# Rahasia — tidak pernah masuk repo
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Database — tidak pernah masuk repo (SCHEMA.md §18)
+*.db
+*.db-shm
+*.db-wal
+
+# Media — tidak pernah masuk repo (DEVOPS.md §0)
+media/
+uploads/
+*.mp4
+*.mov
+*.wav
+*.tif
+
+backup/
+*.tar.gz
+.DS_Store
+.vscode/
+coverage/
+test-results/
+playwright-report/

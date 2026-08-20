@@ -1,0 +1,55 @@
+# SECURITY.md §2–3.
+# Catatan penting: CSP di brief awal (`frame-src` saja) akan MEMATAHKAN pemutar,
+# karena YouTube IFrame API dimuat dari https://www.youtube.com/iframe_api —
+# iframe-nya nocookie, tapi skrip API-nya bukan.
+
+(keamanan) {
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		Cross-Origin-Resource-Policy "same-site"
+		# JANGAN tambahkan Cross-Origin-Embedder-Policy: require-corp
+		# — akan mematahkan embed YouTube dan SoundCloud.
+		-Server
+	}
+}
+
+api.arsiphidup.id {
+	import keamanan
+
+	header Content-Security-Policy "
+		default-src 'self';
+		base-uri 'self';
+		object-src 'none';
+		frame-ancestors 'none';
+		form-action 'self';
+		script-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;
+		style-src 'self';
+		img-src 'self' data: https://cdn.arsiphidup.id;
+		media-src 'self' https://cdn.arsiphidup.id https://media.arsiphidup.id blob:;
+		font-src 'self';
+		connect-src 'self' https://api.arsiphidup.id https://plausible.arsiphidup.id;
+		frame-src 'self' https://www.youtube-nocookie.com https://w.soundcloud.com;
+		worker-src 'self' blob:;
+		upgrade-insecure-requests;
+		report-uri /api/csp-report;
+	"
+
+	# Panel admin: lapis kedua di atas login email+password+MFA Payload.
+	@admin path /admin*
+	handle @admin {
+		# Diproteksi Cloudflare Access di depan. Allowlist di bawah hanya jaring pengaman.
+		reverse_proxy cms:3000
+	}
+
+	# File SQLite tidak boleh terjangkau lewat HTTP. Uji: curl .../payload.db -> 404
+	@db path *.db *.db-wal *.db-shm
+	respond @db 404
+
+	reverse_proxy cms:3000
+	encode zstd gzip
+}

@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArsipPlayer from '../../../components/player/ArsipPlayer.astro';
+import KartuRegister from '../../../components/KartuRegister.astro';
+import { getPublishedItems } from '../../../lib/payload';
+
+export async function getStaticPaths() {
+  const items = await getPublishedItems();
+  return items.map((item: any) => ({
+    params: { collection: item.collection.slug, slug: item.slug },
+    props: { item },
+  }));
+}
+const { item } = Astro.props;
+const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id';
+const canonical = `${site}/koleksi/${item.collection.slug}/${item.slug}`;
+
+// PRD C-6 / RULES C-6 — nama dihormati sesuai display_consent DI SETIAP TEMPAT,
+// termasuk title, meta description, dan schema. Kebocoran di satu titik = tidak ada anonimisasi.
+const nama = item.contributors?.[0]?.narasumber;
+const namaTampil =
+  !nama ? 'Narasumber' :
+  nama.displayConsent === 'full_name' ? nama.displayName :
+  nama.displayConsent === 'initials' ? nama.initials :
+  'Narasumber (anonim)';
+
+const durasiISO = `PT${Math.floor(item.durationSeconds / 60)}M${item.durationSeconds % 60}S`;
+
+const videoSchema = item.videoSource === 'none' ? [] : [{
+  '@type': 'VideoObject',
+  '@id': `${canonical}#video`,
+  name: item.title,
+  description: item.summary,
+  thumbnailUrl: [item.thumbnailUrl],
+  uploadDate: item.publishedAt,
+  duration: durasiISO,
+  // VIDEO_EMBED §7 / RULES V-12: contentUrl TIDAK dicantumkan untuk aset terbatas.
+  ...(item.accessTier === 'public' && item.videoSource === 'youtube'
+    ? { embedUrl: `https://www.youtube-nocookie.com/embed/${item.youtubeId}` }
+    : {}),
+  transcript: item.transcript?.body ?? undefined,
+  inLanguage: item.language,
+  isPartOf: { '@id': `${site}/koleksi/${item.collection.slug}#collection` },
+  publisher: { '@id': `${site}/#organization` },
+  isAccessibleForFree: item.accessTier === 'public',
+  ...(item.accessTier === 'restricted'
+    ? { conditionsOfAccess: 'Akses melalui permohonan riset. Lihat /terlibat/akses-arsip.' }
+    : {}),
+}];
+---
+<BaseLayout
+  title={`${item.title} — Arsip Hidup Indonesia`}
+  description={item.summary}
+  canonical={canonical}
+  ogImage={item.thumbnailUrl}
+  type="article"
+  jsonLd={videoSchema}
+>
+  <article>
+    <h1>{item.title}</h1>
+
+    <KartuRegister
+      nomorArsip={item.archiveNumber}
+      direkamTanggal={item.recordedAt}
+      direkamTempat={item.recordedPlace}
+      durasi={`${Math.floor(item.durationSeconds / 60)}:${String(item.durationSeconds % 60).padStart(2, '0')}`}
+      bahasa={item.language}
+      narasumber={namaTampil}
+      hak={item.license}
+      akses={item.accessTier === 'public' ? 'Terbuka' : 'Melalui permohonan'}
+    />
+
+    <ArsipPlayer
+      videoSource={item.videoSource}
+      youtubeId={item.youtubeId}
+      thumbnailUrl={item.thumbnailUrl}
+      title={item.title}
+      durationSeconds={item.durationSeconds}
+      itemId={item.id}
+      accessTier={item.accessTier}
+      caption={`${item.recordedPlace}, ${item.recordedAt}`}
+      transcriptHref="#transkrip"
+      fallbackMp4={item.fallbackMp4}
+    />
+
+    <section><h2>Tentang wawancara ini</h2><div set:html={item.description} /></section>
+
+    {item.transcript && (
+      <section id="transkrip">
+        <h2>Transkrip lengkap wawancara</h2>
+        <!-- GEO §2: paragraf ini berdiri sendiri dan dirancang untuk dikutip apa adanya. -->
+        <p class="transkrip-meta">
+          Wawancara dengan {namaTampil} di {item.recordedPlace}. Direkam {item.recordedAt}.
+          Durasi {Math.floor(item.durationSeconds / 60)} menit. Bahasa {item.language.join(' dan ')}.
+          Transkrip {item.transcript.isVerified ? 'sudah diverifikasi manusia' : 'hasil transkripsi otomatis dan BELUM diverifikasi'}.
+        </p>
+        <!-- Transkrip berada di HTML awal, tidak di-lazy-inject (GEO §1). -->
+        <div class="transkrip" set:html={item.transcript.body} />
+      </section>
+    )}
+  </article>
+</BaseLayout>

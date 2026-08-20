@@ -1,0 +1,121 @@
+---
+/**
+ * ArsipPlayer — satu-satunya jalur pemutaran video di situs ini.
+ * Halaman TIDAK PERNAH menulis <iframe> sendiri (ARCHITECTURE §4.1, RULES V-3).
+ *
+ * Aturan yang dikodekan di sini:
+ *  V-4  façade wajib — nol request ke domain Google sebelum klik Play
+ *  V-5  thumbnail dari CDN sendiri, bukan i.ytimg.com
+ *  V-6  sandbox tanpa allow-popups / allow-top-navigation
+ *  V-7  DILARANG menutupi elemen player dengan overlay
+ *  V-11 fallback wajib bila pemutar gagal dimuat
+ */
+import '../../styles/player.css';
+
+export interface Props {
+  videoSource: 'youtube' | 'internal' | 'none';
+  youtubeId?: string | null;
+  thumbnailUrl: string;
+  title: string;
+  durationSeconds: number;
+  itemId: string;
+  accessTier: 'public' | 'restricted';
+  caption?: string;
+  transcriptHref?: string;
+  fallbackMp4?: string | null;
+}
+
+const {
+  videoSource, youtubeId, thumbnailUrl, title, durationSeconds,
+  itemId, accessTier, caption, transcriptHref, fallbackMp4,
+} = Astro.props;
+
+// RULES V-2 — validasi ID sebelum dirender. Bukan "dibersihkan": ditolak.
+const YT_ID = /^[A-Za-z0-9_-]{11}$/;
+const idValid = !!youtubeId && YT_ID.test(youtubeId);
+
+// RULES V-7 / PRD B-5 — kombinasi terlarang, dijaga berlapis (DB + di sini).
+if (accessTier === 'restricted' && videoSource === 'youtube') {
+  throw new Error(
+    `[ArsipPlayer] Item ${itemId}: access_tier=restricted tidak boleh video_source=youtube. Lihat PRD B-5.`
+  );
+}
+
+// RULES V-5 — thumbnail wajib dari CDN sendiri.
+if (/ytimg\.com|youtube\.com/.test(thumbnailUrl)) {
+  throw new Error(
+    `[ArsipPlayer] Item ${itemId}: thumbnail hotlink ke domain Google melanggar façade. Lihat RULES V-5.`
+  );
+}
+
+const mm = Math.floor(durationSeconds / 60);
+const ss = String(durationSeconds % 60).padStart(2, '0');
+const durasi = `${mm}:${ss}`;
+---
+
+{accessTier === 'restricted' ? (
+  <aside class="arsip-player arsip-player--restricted">
+    <h3>{title}</h3>
+    <p>Rekaman penuh ({durasi}) tersedia melalui permohonan akses riset.</p>
+    <a class="btn btn--primary" href="/terlibat/akses-arsip">Ajukan akses</a>
+    {transcriptHref && <a class="btn" href={transcriptHref}>Baca transkrip</a>}
+  </aside>
+) : (
+  <figure
+    class="arsip-player"
+    data-arsip-player
+    data-video-source={videoSource}
+    data-video-id={idValid ? youtubeId : ''}
+    data-item-id={itemId}
+    data-title={title}
+    data-fallback-mp4={fallbackMp4 ?? ''}
+    data-transcript-href={transcriptHref ?? ''}
+  >
+    <div class="arsip-player__frame" style="aspect-ratio:16/9">
+      <img
+        src={thumbnailUrl}
+        width="1280" height="720"
+        loading="lazy" decoding="async"
+        alt={`Cuplikan video: ${title}`}
+      />
+      <button type="button" class="arsip-player__play"
+              aria-label={`Putar video: ${title} — durasi ${durasi}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M8 5v14l11-7z" fill="currentColor" />
+        </svg>
+      </button>
+      <noscript>
+        <p class="arsip-player__noscript">
+          Aktifkan JavaScript untuk memutar video, atau
+          <a href={transcriptHref ?? '#transkrip'}>baca transkrip lengkapnya</a>.
+        </p>
+      </noscript>
+    </div>
+
+    <div class="arsip-player__controls" hidden data-controls>
+      <button type="button" data-act="toggle" aria-label="Putar" aria-pressed="false">▶</button>
+      <input type="range" data-act="seek" min="0" max="1000" value="0"
+             aria-label="Posisi pemutaran" />
+      <span data-act="time" class="mono">0:00 / {durasi}</span>
+      <button type="button" data-act="mute" aria-label="Bisukan" aria-pressed="false">🔊</button>
+      <input type="range" data-act="volume" min="0" max="100" value="100" aria-label="Volume" />
+      <button type="button" data-act="rate" aria-label="Kecepatan pemutaran">1×</button>
+      <button type="button" data-act="cc" aria-label="Takarir" aria-pressed="false">CC</button>
+      <button type="button" data-act="fs" aria-label="Layar penuh">⤢</button>
+    </div>
+
+    <div class="arsip-player__fallback" hidden data-fallback>
+      <p>Pemutar tidak dapat dimuat dari jaringan Anda.</p>
+      <div class="arsip-player__fallback-actions"></div>
+    </div>
+
+    <figcaption>
+      {caption}
+      <span class="arsip-player__privacy">
+        Memutar video akan memuat pemutar YouTube (mode tanpa cookie).
+      </span>
+    </figcaption>
+  </figure>
+)}
+
+<script src="./arsip-player.ts"></script>

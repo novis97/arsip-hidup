@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedItems, getCollections } from '../lib/payload';
+const items = await getPublishedItems();
+const collections = await getCollections();
+// RULES §1.7 — angka berasal dari basis data. Tidak ada angka karangan di situs arsip.
+const jamRekaman = Math.round(items.reduce((a: number, i: any) => a + (i.durationSeconds || 0), 0) / 3600);
+---
+<BaseLayout
+  title="Arsip Hidup Indonesia — arsip sejarah lisan pelaku budaya"
+  description="Arsip sejarah lisan yang mendokumentasikan pengetahuan, kehidupan, dan praktik pelaku budaya Indonesia. Proyek pertama: Batik Tulis Pekalongan."
+  canonical={import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id'}
+>
+  <section>
+    <h1>Setiap budaya bertahan karena ada yang mengingat.</h1>
+    <dl class="mono">
+      <div><dt>Sejarah lisan</dt><dd>{items.length}</dd></div>
+      <div><dt>Jam rekaman</dt><dd>{jamRekaman}</dd></div>
+      <div><dt>Koleksi</dt><dd>{collections.length}</dd></div>
+    </dl>
+    <p><a class="btn btn--primary" href="/jelajah">Jelajahi arsip</a>
+       <a class="btn" href="/cerita">Tonton cerita</a></p>
+  </section>
+  <!-- TODO Fase 2: Cerita Pilihan, Tema, Peta, Koleksi, Dokumentasi terbaru (DESIGN §4.1) -->
+</BaseLayout>

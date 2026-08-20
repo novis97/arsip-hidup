@@ -1,0 +1,37 @@
+# DEVOPS §5. Sedikit layanan = sedikit yang harus di-patch, dipantau, dan dipulihkan.
+# Tidak ada Postgres. Tidak ada MinIO. Tidak ada Redis.
+services:
+  cms:
+    build: ./apps/cms
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - sqlite-data:/data          # file SQLite di volume terpisah, di luar direktori web
+    expose: ["3000"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [cms]
+
+  uptime:
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    volumes: ["uptime-data:/app/data"]
+    expose: ["3001"]
+
+volumes:
+  sqlite-data:
+  caddy-data:
+  caddy-config:
+  uptime-data:

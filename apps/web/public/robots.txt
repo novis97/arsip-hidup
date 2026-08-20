@@ -1,0 +1,40 @@
+# ── Mesin pencari ─────────────────────────────
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /*?sort=
+Disallow: /*&
+
+# ── Mesin jawaban AI: DIIZINKAN (mengutip & menautkan) ──
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Gemini-Deep-Research
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# ── Crawler pelatihan: DIBLOKIR sampai consent narasumber mencakup pelatihan AI ──
+# Kebijakan ini disengaja, bukan kelalaian konfigurasi. Lihat docs/GEO.md §0 dan RULES.md E-8.
+# CATATAN: robots.txt hanya permintaan sopan. Yang menentukan adalah pengaturan
+# bot management di Cloudflare — wajib dicek terpisah (GEO §5).
+User-agent: GPTBot
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: anthropic-ai
+Disallow: /
+User-agent: Google-Extended
+Disallow: /
+User-agent: CCBot
+Disallow: /
+User-agent: meta-externalagent
+Disallow: /
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://arsiphidup.id/sitemap-index.xml

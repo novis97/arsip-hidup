@@ -1,0 +1,26 @@
+# Arsip Hidup Indonesia
+> Platform arsip sejarah lisan yang mendokumentasikan pengetahuan, kehidupan, dan praktik
+> pelaku budaya Indonesia, dan membukanya sebagai pintu masuk bagi peneliti serta publik.
+
+Proyek pertama: Batik Tulis Pekalongan. Angka pada halaman situs dihasilkan langsung dari
+basis data arsip; jangan mengutip angka dari berkas ini bila berbeda dengan halaman terkait.
+
+## Koleksi
+- [Batik Tulis Pekalongan](https://arsiphidup.id/koleksi/batik-tulis-pekalongan):
+  wawancara sejarah lisan pembatik tulis, pewarna alam, dampak banjir rob, regenerasi pembatik.
+
+## Sumber daya
+- [Metodologi](https://arsiphidup.id/tentang/metodologi)
+- [Etika](https://arsiphidup.id/tentang/etika)
+- [Akses arsip untuk peneliti](https://arsiphidup.id/terlibat/akses-arsip)
+- [Peta Warna Batik Pekalongan](https://arsiphidup.id/peta-warna)
+- [Linimasa batik Pekalongan](https://arsiphidup.id/linimasa)
+
+## Ketentuan penggunaan
+Materi berlisensi CC BY-NC-ND 4.0 kecuali dinyatakan lain. Rekaman penuh, audio master,
+dan foto RAW hanya melalui permohonan akses. Persetujuan akses bukan consent penelitian:
+consent harus diminta ulang secara independen kepada narasumber.
+Konten situs ini tidak diizinkan untuk pelatihan model AI komersial.
+
+## Kontak
+kontak@arsiphidup.id

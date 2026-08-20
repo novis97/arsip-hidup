@@ -1,0 +1,87 @@
+name: CI
+on:
+  pull_request:
+  push: { branches: [main, dev] }
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      # RULES K-4 — CVE High/Critical memblokir merge.
+      - run: pnpm audit --audit-level=high
+      - name: Pindai secret yang ter-commit
+        uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' }
+
+  # ── Gate yang sengaja memblokir. DEVOPS §4. ──
+  facade:
+    name: 'Gate: façade video (RULES V-4)'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - run: pnpm test:facade
+
+  a11y:
+    name: 'Gate: aksesibilitas (WCAG 2.2 AA)'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec axe dist --exit --tags wcag2a,wcag2aa,wcag21aa,wcag22aa
+
+  headers:
+    name: 'Gate: header keamanan'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pastikan CSP mencakup skrip IFrame API
+        run: |
+          # CSP tanpa www.youtube.com di script-src akan mematahkan pemutar.
+          grep -q "script-src 'self' https://www.youtube.com" infra/caddy/Caddyfile
+          grep -q "frame-src 'self' https://www.youtube-nocookie.com" infra/caddy/Caddyfile
+          ! grep -q "unsafe-inline" <(grep 'script-src' infra/caddy/Caddyfile)
+          ! grep -q "Cross-Origin-Embedder-Policy" infra/caddy/Caddyfile
+
+  budget:
+    name: 'Gate: budget bundel < 400 KB'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: |
+          SIZE=$(find apps/web/dist -name '*.js' -o -name '*.css' | xargs cat | gzip -c | wc -c)
+          echo "Bundel terkompresi: ${SIZE} byte"
+          [ "$SIZE" -lt 409600 ] || { echo "Melebihi budget 400 KB (PRD §6)"; exit 1; }

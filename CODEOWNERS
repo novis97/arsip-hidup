@@ -1,0 +1,7 @@
+# Perubahan pada path ini wajib direview (RULES.md K-3, K-8)
+/infra/                                @novis97
+/docs/                                 @novis97
+/apps/web/src/components/player/       @novis97
+/apps/cms/src/collections/Users.ts     @novis97
+/apps/cms/src/collections/AuditLogs.ts @novis97
+/.github/workflows/                    @novis97

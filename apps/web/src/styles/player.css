@@ -1,0 +1,33 @@
+/* DESIGN §5. Radius 0, tanpa bayangan — bahasa register arsip, bukan aplikasi SaaS. */
+.arsip-player { margin: var(--s6) 0; }
+.arsip-player__frame { position: relative; background: var(--malam); overflow: hidden; }
+.arsip-player__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.arsip-player__iframe-host, .arsip-player__iframe-host iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+.arsip-player__play {
+  position: absolute; inset: 0; margin: auto;
+  width: 72px; height: 72px;              /* DESIGN §5.2 — target sentuh besar */
+  border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--mengkudu); color: var(--mori);
+}
+.arsip-player__play svg { width: 36px; height: 36px; }
+
+.arsip-player__controls {
+  display: flex; align-items: center; gap: var(--s3);
+  padding: var(--s3); background: var(--malam); color: var(--mori); flex-wrap: wrap;
+}
+.arsip-player__controls button {
+  background: transparent; border: 1px solid rgba(247,245,240,.35);
+  color: inherit; min-width: 44px; min-height: 44px; cursor: pointer;
+}
+.arsip-player__controls [data-act="seek"] { flex: 1 1 200px; }
+
+.arsip-player__fallback,
+.arsip-player--restricted { padding: var(--s5); background: var(--kertas); }
+.arsip-player__fallback-actions { display: flex; gap: var(--s3); flex-wrap: wrap; margin-top: var(--s4); }
+.arsip-player__privacy { display: block; font-size: 14px; opacity: .75; margin-top: var(--s2); }
+.arsip-player figcaption { font-size: 15px; margin-top: var(--s3); }
+.arsip-player__after { padding: var(--s4); background: var(--kertas); }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

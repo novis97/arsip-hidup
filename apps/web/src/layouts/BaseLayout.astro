@@ -1,0 +1,53 @@
+---
+import '../styles/tokens.css';
+export interface Props {
+  title: string; description: string; canonical: string;
+  ogImage?: string; type?: 'website' | 'article'; jsonLd?: object[];
+}
+const { title, description, canonical, ogImage, type = 'website', jsonLd = [] } = Astro.props;
+const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id';
+---
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="id" href={canonical} />
+  <link rel="alternate" hreflang="x-default" href={canonical} />
+  <meta property="og:type" content={type} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content="id_ID" />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Organization + WebSite: entitas konsisten di seluruh situs (GEO §7) -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': ['Organization', 'ArchiveOrganization'],
+        '@id': `${site}/#organization`,
+        name: 'Arsip Hidup Indonesia',
+        url: site,
+        description:
+          'Arsip Hidup Indonesia adalah platform arsip sejarah lisan yang mendokumentasikan pengetahuan, kehidupan, dan praktik pelaku budaya Indonesia, dan membukanya sebagai pintu masuk bagi peneliti serta publik.',
+        sameAs: [], // TODO: isi dengan profil nyata. Kosong lebih baik daripada karangan.
+      },
+      { '@type': 'WebSite', '@id': `${site}/#website`, url: site, name: 'Arsip Hidup Indonesia', inLanguage: 'id-ID' },
+      ...jsonLd,
+    ],
+  })} />
+  <slot name="head" />
+</head>
+<body>
+  <a href="#konten" class="skip">Lewati ke konten</a>
+  <header><nav aria-label="Utama"><!-- TODO: nav --></nav></header>
+  <main id="konten"><slot /></main>
+  <footer><p class="mono">© {new Date().getFullYear()} Arsip Hidup Indonesia</p></footer>
+</body>
+</html>
