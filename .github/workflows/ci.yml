@@ -28,7 +28,7 @@ jobs:
       # RULES K-4 — CVE High/Critical memblokir merge.
       - run: pnpm audit --audit-level=high
       - name: Pindai secret yang ter-commit
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env: { GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' }
 
   # ── Gate yang sengaja memblokir. DEVOPS §4. ──
