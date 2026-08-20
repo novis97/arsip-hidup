@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // Aturan agent proyek dikelola di AGENTS.md root agar tidak terduplikasi.
+  agentRules: false,
   images: {
     localPatterns: [
       {
