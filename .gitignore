@@ -32,3 +32,6 @@ backup/
 coverage/
 test-results/
 playwright-report/
+
+# TypeScript build cache
+*.tsbuildinfo
