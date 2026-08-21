@@ -19,6 +19,7 @@ const run = async () => {
       periodStart: 1950,
       periodEnd: 2026,
       status: "active",
+      funder: [],
       _status: "published",
     },
   });
@@ -36,7 +37,7 @@ const run = async () => {
     },
   });
 
-  await payload.create({
+  const arsip = await payload.create({
     collection: "archive-items",
     data: {
       archiveNumber: "AHI/BTP/2026/001",
@@ -60,6 +61,18 @@ const run = async () => {
       withdrawalRequested: false,
       contributors: [{ narasumber: n.id, role: "narasumber" }],
       _status: "published",
+    },
+  });
+
+  await payload.create({
+    collection: "transcripts",
+    data: {
+      archiveItem: arsip.id,
+      language: "id",
+      format: "plain",
+      body: "[SEED] Transkrip fiktif tentang proses mencanting dan pewarna alam.",
+      isVerified: true,
+      visibility: "public",
     },
   });
 

@@ -21,12 +21,14 @@ export const Transcripts: CollectionConfig = {
     {
       name: "language",
       type: "select",
+      required: true,
       options: ["id", "jv", "en"],
       defaultValue: "id",
     },
     {
       name: "format",
       type: "select",
+      required: true,
       options: ["plain", "timecoded", "vtt"],
       defaultValue: "timecoded",
     },
@@ -44,6 +46,7 @@ export const Transcripts: CollectionConfig = {
     {
       name: "visibility",
       type: "select",
+      required: true,
       options: ["public", "restricted"],
       defaultValue: "public",
       admin: {

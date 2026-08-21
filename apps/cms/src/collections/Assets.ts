@@ -40,6 +40,10 @@ export const Assets: CollectionConfig = {
       defaultValue: "public",
       options: ["public", "restricted"],
     },
+    { name: "storageBucket", type: "text", required: true },
+    { name: "storageKey", type: "text", required: true },
+    { name: "fileSizeBytes", type: "number" },
+    { name: "durationSeconds", type: "number" },
     {
       name: "altText",
       type: "text",
@@ -59,11 +63,18 @@ export const Assets: CollectionConfig = {
         description: "Verifikasi integritas jangka panjang. Bit rot itu nyata.",
       },
     },
-    { name: "hlsManifestKey", type: "text" },
+    // V-13: master tidak pernah dilayani lewat web.
+    // Penegakan ada di authorizeAsset (Fase 3) — field ini BELUM
+    // menegakkan apa pun.
+    // TODO(T3.x): tolak di authorizeAsset bila isOriginalMaster === true.
     {
       name: "isOriginalMaster",
       type: "checkbox",
       defaultValue: false,
+      access: {
+        create: ({ req }) => req.user?.role === "admin",
+        update: ({ req }) => req.user?.role === "admin",
+      },
       admin: {
         description:
           "Master TIDAK PERNAH dilayani lewat HTTP. Simpan di penyimpanan pelestarian.",

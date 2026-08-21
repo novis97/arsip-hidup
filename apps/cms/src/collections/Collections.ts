@@ -34,7 +34,17 @@ export const Collections: CollectionConfig = {
       defaultValue: "active",
     },
     {
-      name: "funders",
+      name: "coverAsset",
+      type: "relationship",
+      relationTo: "assets",
+    },
+    {
+      name: "ogImageAsset",
+      type: "relationship",
+      relationTo: "assets",
+    },
+    {
+      name: "funder",
       type: "array",
       fields: [{ name: "name", type: "text", required: true }],
       admin: {
@@ -42,5 +52,6 @@ export const Collections: CollectionConfig = {
           "HANYA mitra dan pendana yang benar-benar terlibat. Jangan cantumkan logo lembaga yang belum bermitra (RULES §1.6).",
       },
     },
+    { name: "sortOrder", type: "number" },
   ],
 };
