@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload';
-import { isStaff, publishedOnly } from '../access/roles';
+import { isStaff, publishedNotWithdrawn } from '../access/roles';
 
 const YT_ID = /^[A-Za-z0-9_-]{11}$/;
 
@@ -13,7 +13,7 @@ export const ArchiveItems: CollectionConfig = {
   labels: { singular: 'Arsip', plural: 'Arsip' },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'collection', 'accessTier', '_status'], group: 'Arsip' },
   versions: { drafts: true },          // riwayat versi = bagian dari integritas arsip
-  access: { read: publishedOnly, create: isStaff, update: isStaff, delete: isStaff },
+  access: { read: publishedNotWithdrawn, create: isStaff, update: isStaff, delete: isStaff },
   fields: [
     { name: 'archiveNumber', type: 'text', required: true, unique: true,
       admin: { description: 'Format: AHI/BTP/2026/014' } },

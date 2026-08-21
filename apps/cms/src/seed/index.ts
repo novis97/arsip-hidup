@@ -11,7 +11,7 @@ const run = async () => {
   const koleksi = await payload.create({
     collection: 'collections',
     data: {
-      title: 'Batik Tulis Pekalongan', slug: 'batik-tulis-pekalongan',
+      title: '[SEED] Batik Tulis Pekalongan', slug: 'seed-batik-tulis-pekalongan',
       descriptionShort:
         'Dokumentasi sejarah lisan pembatik tulis di Pekalongan, Jawa Tengah, mencakup pewarna alam, dampak banjir rob, dan regenerasi pembatik.',
       region: 'Pekalongan, Jawa Tengah', periodStart: 1950, periodEnd: 2026,

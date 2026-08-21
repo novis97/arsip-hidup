@@ -12,11 +12,17 @@ export const isStaff: Access = ({ req }) => has(req, 'admin', 'editor', 'archivi
 export const isReviewer: Access = ({ req }) => has(req, 'admin', 'reviewer');
 export const isAdminField: FieldAccess = ({ req }) => has(req, 'admin');
 
-/**
- * Default deny untuk publik (SECURITY §5).
- * Item terbit yang ditarik narasumber TIDAK PERNAH lolos, meski statusnya published.
- */
+/** Konten ber-draft hanya dapat dibaca publik setelah diterbitkan. */
 export const publishedOnly: Access = ({ req }) => {
+  if (has(req, 'admin', 'editor', 'archivist')) return true;
+  return { _status: { equals: 'published' } };
+};
+
+/**
+ * Arsip yang ditarik narasumber TIDAK PERNAH lolos untuk publik,
+ * meski statusnya masih published (RULES E-3).
+ */
+export const publishedNotWithdrawn: Access = ({ req }) => {
   if (has(req, 'admin', 'editor', 'archivist')) return true;
   return {
     and: [
@@ -24,6 +30,12 @@ export const publishedOnly: Access = ({ req }) => {
       { withdrawalRequested: { equals: false } },
     ],
   };
+};
+
+/** Koleksi tanpa status draft memakai field visibilitasnya sendiri. */
+export const publicReadable: Access = ({ req }) => {
+  if (has(req, 'admin', 'editor', 'archivist')) return true;
+  return { visibility: { equals: 'public' } };
 };
 
 export const denyAll: Access = () => false;

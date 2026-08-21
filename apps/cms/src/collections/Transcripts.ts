@@ -1,11 +1,11 @@
 import type { CollectionConfig } from 'payload';
-import { isStaff, publishedOnly } from '../access/roles';
+import { isStaff, publicReadable } from '../access/roles';
 
 /** SCHEMA §4. Aset SEO/GEO terbesar situs ini. */
 export const Transcripts: CollectionConfig = {
   slug: 'transcripts',
   admin: { group: 'Arsip', useAsTitle: 'id' },
-  access: { read: publishedOnly, create: isStaff, update: isStaff, delete: isStaff },
+  access: { read: publicReadable, create: isStaff, update: isStaff, delete: isStaff },
   fields: [
     { name: 'archiveItem', type: 'relationship', relationTo: 'archive-items', required: true },
     { name: 'language', type: 'select', options: ['id', 'jv', 'en'], defaultValue: 'id' },
