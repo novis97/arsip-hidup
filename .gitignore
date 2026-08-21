@@ -35,3 +35,6 @@ playwright-report/
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Payload generated types
+apps/cms/src/payload-types.ts
