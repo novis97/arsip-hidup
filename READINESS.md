@@ -4,9 +4,9 @@ Diperiksa 21 Agustus 2026 terhadap worktree lokal dan remote Git terakhir.
 
 ## Jawaban singkat
 
-**Dependensi sudah dikunci dan boilerplate Payload sudah tersedia. Verifikasi runtime T0.2 masih harus diselesaikan.**
+**Dependensi sudah dikunci dan runtime Payload T0.2 sudah terverifikasi. Repo siap melanjutkan ke T0.3.**
 
-`pnpm-lock.yaml` dihasilkan pada commit `2e7a5ab`. Boilerplate Next.js/Payload dipasang pada commit `3a9a281`. Keberadaan berkas tidak otomatis menutup T0.2: halaman login `/admin` tetap harus dimuat dengan konfigurasi lokal yang valid.
+`pnpm-lock.yaml` dihasilkan pada commit `2e7a5ab`. Boilerplate Next.js/Payload dipasang pada commit `3a9a281`, import map admin dilengkapi pada `525c4e5`, dan pemuatan konfigurasi root untuk pengembangan diperbaiki pada `62f2bd2`. Verifikasi akhir membuktikan `/admin/login` merespons HTTP 200 tanpa error rahasia maupun import map.
 
 ---
 
@@ -23,7 +23,8 @@ Diperiksa 21 Agustus 2026 terhadap worktree lokal dan remote Git terakhir.
 | Aturan privasi/consent ditegakkan kode, bukan SOP | ✅ |
 | Tiket kerja beserta konteks & verifikasi | ✅ 32 tiket |
 | `pnpm-lock.yaml` | ✅ tersedia (`2e7a5ab`) |
-| Boilerplate Next.js/Payload | ✅ berkas tersedia (`3a9a281`); runtime belum diverifikasi |
+| Boilerplate Next.js/Payload | ✅ runtime terverifikasi (`3a9a281`, `525c4e5`, `62f2bd2`) |
+| Halaman login `/admin` | ✅ HTTP 200; rahasia root terbaca dan import map bersih |
 
 ## Koreksi yang baru ditemukan saat verifikasi
 
@@ -45,8 +46,8 @@ Ini bukan catatan kaki. Ini bukti langsung bahwa aturan anti-halusinasi di `AGEN
 
 | Penghambat | Tiket | Bisa diselesaikan agent sendiri? |
 |---|---|---|
-| Halaman login `/admin` belum diverifikasi dengan konfigurasi lokal | T0.2 | Ya, setelah rahasia lokal tersedia |
-| `PAYLOAD_SECRET`, kredensial R2, `AUDIT_HASH_SALT` kosong | — | **Tidak.** Butuh manusia |
+| Delapan error typecheck scaffold perlu dipilah per tiket; sebagian menyentuh zona tanpa vibe | T0.3 dan tiket koleksi terkait | Ya, dengan dokumen wajib dan gate masing-masing |
+| Kredensial R2 produksi belum diverifikasi | — | **Tidak.** Butuh manusia/pemilik akun |
 | Akun R2 & VPS belum dibeli | G-3 | **Tidak.** Butuh Addendum I lebih dulu |
 | `sameAs` di schema Organization kosong | T4.2 | Tidak — butuh URL profil nyata |
 | API Astro 7 berbeda dari yang saya tulis | T1.2–T1.6 | Ya, setelah T0.1 tipe bisa dibaca |
@@ -70,12 +71,12 @@ Baris terakhir jujur: scaffold `.astro` berasal dari rancangan awal sebelum depe
 
 ## Langkah berikutnya
 
-Pastikan `.env` lokal diisi oleh manusia berdasarkan `.env.example`, lalu buka sesi berikut dengan prompt:
+Buka sesi berikut dengan prompt:
 
-> Baca `AGENTS.md` dan `BUILD_PLAN.md`. Kerjakan **hanya verifikasi tiket T0.2**.
-> Jalankan CMS dan buktikan `/admin` memuat halaman login. Jangan sentuh T0.3.
+> Baca `AGENTS.md`, bagian T0.3 di `BUILD_PLAN.md`, dan konteks wajib tiket. Kerjakan **hanya tiket T0.3**.
+> Jalankan migrasi dan seed, lalu buktikan data yang diwajibkan tampil di `/admin` dan API. Jangan sentuh T0.4.
 
-Setelah T0.2 benar-benar lolos, lanjutkan T0.3. Dua commit lokal fondasi belum berada pada remote-tracking `origin/dev`; push adalah tindakan terpisah dan tidak tersirat oleh status ini.
+T0.2 sudah lolos. Commit fondasi lokal belum berada pada remote-tracking `origin/dev`; push adalah tindakan terpisah dan tidak tersirat oleh status ini.
 
 ## Empat hal yang tidak boleh diserahkan ke agent
 

@@ -11,8 +11,8 @@ Estimasi memakai satuan **sesi** (± 1–3 jam kerja terfokus), bukan hari, kare
 ## Status eksekusi — 21 Agustus 2026
 
 - **T0.1 selesai** di commit `2e7a5ab`: dependensi ter-resolve dan `pnpm-lock.yaml` tersedia.
-- **T0.2 implementasi tersedia** di commit `3a9a281`: boilerplate Next.js/Payload sudah dipasang. Tiket belum ditutup sampai `/admin` memuat halaman login sesuai verifikasi tiket.
-- Tiket aktif berikutnya tetap **T0.2 (verifikasi)**, lalu T0.3. Keberadaan berkas bukan pengganti gerbang verifikasi.
+- **T0.2 selesai** melalui commit `3a9a281`, `525c4e5`, dan `62f2bd2`: boilerplate tersedia, import map admin lengkap, konfigurasi lokal dimuat dari root monorepo, dan `/admin/login` merespons HTTP 200 tanpa error import map.
+- Tiket aktif berikutnya adalah **T0.3**. Delapan error typecheck scaffold yang ditemukan saat verifikasi T0.2 dicatat sebagai utang teknis terpisah dan tidak boleh diperbaiki "sekalian", terutama yang menyentuh zona tanpa vibe.
 
 ---
 
@@ -130,6 +130,6 @@ T5.1 isi 12 arsip + 5 cerita + 20 direktori (**kerja PIHAK PERTAMA**, mulai para
 | Zip lama tercampur zip baru | Satu sumber kebenaran: repo Git, bukan folder unduhan |
 
 ## Langkah berikutnya
-1. Isi rahasia lokal yang diperlukan berdasarkan `.env.example`; jangan commit `.env`.
-2. Verifikasi T0.2 dengan menjalankan `pnpm dev:cms` dan membuka `http://localhost:3000/admin`.
-3. Jika halaman login berhasil dimuat, tutup T0.2 dan mulai T0.3. Jangan buka tiket lain.
+1. Mulai T0.3 dengan membaca hanya konteks yang ditentukan tiket dan dokumen wajib untuk berkas zona tanpa vibe.
+2. Jalankan migrasi serta seed; perbaiki data seed jika validasi menolaknya, bukan aturan validasinya.
+3. Verifikasi satu koleksi, satu narasumber, dan satu arsip terbit muncul di `/admin`, lalu pastikan API mengembalikan satu arsip.

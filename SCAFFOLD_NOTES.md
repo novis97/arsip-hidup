@@ -7,7 +7,7 @@ Dibuat 20 Agustus 2026; status diperbarui 21 Agustus 2026. Dokumen ini sengaja j
 | Berkas | Status |
 |---|---|
 | `pnpm-lock.yaml` | **Ada.** Dihasilkan pada T0.1 (`2e7a5ab`). |
-| `apps/cms/src/app/(payload)/**`, konfigurasi Next.js, dan tipe Payload | **Ada.** Dipasang pada T0.2 (`3a9a281`); `/admin` masih harus diverifikasi sebelum tiket ditutup. |
+| `apps/cms/src/app/(payload)/**`, konfigurasi Next.js, dan tipe Payload | **Ada dan terverifikasi.** Dipasang pada T0.2 (`3a9a281`), import map dilengkapi (`525c4e5`), dan konfigurasi root dimuat saat development (`62f2bd2`). `/admin/login` merespons HTTP 200. |
 
 ## Sudah lengkap dan siap dipakai
 | Berkas | Status |
@@ -32,7 +32,7 @@ Dibuat 20 Agustus 2026; status diperbarui 21 Agustus 2026. Dokumen ini sengaja j
 | Halaman `/jelajah`, `/direktori`, `/peta-warna`, `/linimasa`, `/tentang/*` | Fase 2–3 | |
 
 ## Yang harus diselesaikan berikutnya
-1. **T0.2 — verifikasi runtime.** Jalankan CMS dengan rahasia lokal yang valid dan buktikan `/admin` memuat halaman login.
+1. **T0.3 — migrasi dan seed.** Jalankan migrasi serta seed, lalu buktikan satu koleksi, satu narasumber, dan satu arsip terbit muncul di `/admin` dan API. Delapan error typecheck scaffold harus dipilah menurut tiket dan aturan zona tanpa vibe, bukan diperbaiki sekaligus.
 2. **G-3 — Addendum I.** Selesaikan sebelum VPS dibeli. Biaya berjalan tiap bulan; menagih belakangan menempatkan Anda pada posisi lemah.
 3. **G-6 — siapa mengoreksi transkrip.** Perkiraan realistis 3–5× durasi rekaman untuk bahasa campuran Indonesia–Jawa. Tanpa ini, aset SEO/GEO terbesar situs tidak pernah ada.
 4. **G-7 — kepemilikan akun.** Domain, VPS, Cloudflare, R2, YouTube atas nama PIHAK PERTAMA.
