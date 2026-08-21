@@ -21,7 +21,6 @@ import { AccessRequests } from "./src/collections/AccessRequests";
 import { AccessGrants } from "./src/collections/AccessGrants";
 import { AuditLogs } from "./src/collections/AuditLogs";
 import { mediaEndpoints } from "./src/endpoints/mediaPlayback";
-import { triggerDeploy } from "./src/lib/deploy";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -71,12 +70,11 @@ export default buildConfig({
         assets: {
           // Bucket ditentukan per-dokumen oleh tier. Materi terbatas
           // TIDAK PERNAH masuk bucket publik (RULES V-9).
-          bucket: process.env.R2_BUCKET_PUBLIC!,
-          disablePayloadAccessControl: false,
           generateFileURL: ({ filename }) =>
             `${process.env.PUBLIC_CDN_URL}/${filename}`,
         },
       },
+      bucket: process.env.R2_BUCKET_PUBLIC!,
       config: {
         endpoint: process.env.R2_ENDPOINT,
         region: "auto",
@@ -87,10 +85,6 @@ export default buildConfig({
       },
     }),
   ],
-
-  // Publish memicu build statis. Jeda 1–3 menit adalah konsekuensi sadar
-  // dari memisahkan situs publik dari VPS (ARCHITECTURE §2.2).
-  hooks: { afterChange: [triggerDeploy] },
 
   typescript: { outputFile: path.resolve(dirname, "src/payload-types.ts") },
 });

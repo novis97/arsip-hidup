@@ -43,7 +43,10 @@ export const Assets: CollectionConfig = {
     {
       name: "altText",
       type: "text",
-      validate: (val: string, { siblingData }: any) =>
+      validate: (
+        val: string | string[] | null | undefined,
+        { siblingData }: any,
+      ) =>
         siblingData?.kind !== "photo" ||
         !!val ||
         "Alt text wajib untuk foto (aksesibilitas + SEO).",

@@ -21,10 +21,14 @@
     "backup": "bash infra/scripts/backup.sh"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.13.0",
+    "@eslint/js": "9",
     "@playwright/test": "^1.62.1",
     "eslint": "^9.12.0",
+    "eslint-plugin-astro": "1",
     "prettier": "^3.3.3",
     "typescript": "^5.6.0",
+    "typescript-eslint": "^8.67.0",
     "vitest": "^4.1.11"
   }
 }

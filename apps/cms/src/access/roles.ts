@@ -1,4 +1,4 @@
-import type { Access, FieldAccess } from "payload";
+import type { Access, FieldAccess, Where } from "payload";
 
 export type Role =
   "admin" | "editor" | "archivist" | "reviewer" | "researcher" | "member";
@@ -32,12 +32,13 @@ export const publishedOnly: Access = ({ req }) => {
  */
 export const publishedNotWithdrawn: Access = ({ req }) => {
   if (has(req, "admin", "editor", "archivist")) return true;
-  return {
+  const filter: Where = {
     and: [
       { _status: { equals: "published" } },
       { withdrawalRequested: { equals: false } },
     ],
   };
+  return filter;
 };
 
 /** Koleksi tanpa status draft memakai field visibilitasnya sendiri. */

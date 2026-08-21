@@ -13,7 +13,7 @@ export const Users: CollectionConfig = {
     maxLoginAttempts: 5, // lockout 5 percobaan
     lockTime: 15 * 60 * 1000, // 15 menit
     useAPIKey: true, // dipakai proses build Astro (read-only)
-    cookies: { sameSite: "Lax", secure: true, httpOnly: true },
+    cookies: { sameSite: "Lax", secure: true },
     verify: true,
     forgotPassword: { expiration: 30 * 60 * 1000 },
   },

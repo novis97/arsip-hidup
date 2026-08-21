@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { isStaff, publishedNotWithdrawn } from "../access/roles";
+import { triggerDeploy } from "../lib/deploy";
 
 const YT_ID = /^[A-Za-z0-9_-]{11}$/;
 
@@ -100,8 +101,8 @@ export const ArchiveItems: CollectionConfig = {
         description:
           "WAJIB dari cdn.arsiphidup.id. Hotlink ke i.ytimg.com merusak façade.",
       },
-      validate: (val: string) =>
-        !/ytimg\.com|youtube\.com/.test(val || "") ||
+      validate: (val: string | string[] | null | undefined) =>
+        !/ytimg\.com|youtube\.com/.test(String(val ?? "")) ||
         "Thumbnail tidak boleh hotlink ke domain Google (RULES V-5).",
     },
     {
@@ -210,6 +211,9 @@ export const ArchiveItems: CollectionConfig = {
   ],
 
   hooks: {
+    // Publish memicu build statis. Jeda 1–3 menit adalah konsekuensi sadar
+    // dari memisahkan situs publik dari VPS (ARCHITECTURE §2.2).
+    afterChange: [triggerDeploy],
     beforeValidate: [
       ({ data }) => {
         if (!data) return data;

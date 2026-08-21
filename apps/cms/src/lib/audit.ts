@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import type { Payload } from "payload";
+import type { AuditLog, User } from "../payload-types";
 
 /**
  * SECURITY §7. IP mentah tidak pernah persisten.
@@ -19,10 +20,10 @@ export function actorHash(ip: string, ua: string): string {
 }
 
 type Ev = {
-  eventType: string;
+  eventType: AuditLog["eventType"];
   targetType?: string;
   targetId?: string;
-  actorUser?: string;
+  actorUser?: User["id"];
   ip?: string;
   ua?: string;
   metadata?: Record<string, unknown>;
