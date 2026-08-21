@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - sqlite-data:/data          # file SQLite di volume terpisah, di luar direktori web
+      - sqlite-data:/data # file SQLite di volume terpisah, di luar direktori web
     expose: ["3000"]
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]

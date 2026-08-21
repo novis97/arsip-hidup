@@ -1,5 +1,5 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 /**
  * Klien R2. Satu instance dipakai ulang — membuat S3Client per request
@@ -9,12 +9,13 @@ let client: S3Client | null = null;
 
 export function r2(): S3Client {
   if (client) return client;
-  const required = ['R2_ENDPOINT', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY'];
+  const required = ["R2_ENDPOINT", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY"];
   const missing = required.filter((k) => !process.env[k]);
-  if (missing.length) throw new Error(`Konfigurasi R2 belum lengkap: ${missing.join(', ')}`);
+  if (missing.length)
+    throw new Error(`Konfigurasi R2 belum lengkap: ${missing.join(", ")}`);
 
   client = new S3Client({
-    region: 'auto',
+    region: "auto",
     endpoint: process.env.R2_ENDPOINT,
     credentials: {
       accessKeyId: process.env.R2_ACCESS_KEY_ID!,
@@ -27,13 +28,18 @@ export function r2(): S3Client {
 export const TTL = () => {
   const ttl = Number(process.env.SIGNED_URL_TTL_SECONDS ?? 300);
   if (!Number.isFinite(ttl) || ttl <= 0 || ttl > 300) {
-    throw new Error(`SIGNED_URL_TTL_SECONDS tidak valid atau melebihi 300 detik (RULES V-9): ${ttl}`);
+    throw new Error(
+      `SIGNED_URL_TTL_SECONDS tidak valid atau melebihi 300 detik (RULES V-9): ${ttl}`,
+    );
   }
   return ttl;
 };
 
-export function bucketFor(tier: 'public' | 'restricted'): string {
-  const b = tier === 'restricted' ? process.env.R2_BUCKET_RESTRICTED : process.env.R2_BUCKET_PUBLIC;
+export function bucketFor(tier: "public" | "restricted"): string {
+  const b =
+    tier === "restricted"
+      ? process.env.R2_BUCKET_RESTRICTED
+      : process.env.R2_BUCKET_PUBLIC;
   if (!b) throw new Error(`Bucket untuk tier ${tier} belum dikonfigurasi.`);
   return b;
 }
@@ -53,14 +59,21 @@ export async function presignGet(opts: {
     Bucket: opts.bucket,
     Key: opts.key,
     ...(opts.downloadFilename
-      ? { ResponseContentDisposition: `attachment; filename="${opts.downloadFilename.replace(/"/g, '')}"` }
+      ? {
+          ResponseContentDisposition: `attachment; filename="${opts.downloadFilename.replace(/"/g, "")}"`,
+        }
       : {}),
   });
   return getSignedUrl(r2(), cmd, { expiresIn: ttl });
 }
 
 /** Ambil isi objek sebagai teks — dipakai untuk membaca manifest .m3u8 lalu menulis ulangnya. */
-export async function getObjectText(bucket: string, key: string): Promise<string> {
-  const res = await r2().send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+export async function getObjectText(
+  bucket: string,
+  key: string,
+): Promise<string> {
+  const res = await r2().send(
+    new GetObjectCommand({ Bucket: bucket, Key: key }),
+  );
   return res.Body!.transformToString();
 }

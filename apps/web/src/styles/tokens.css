@@ -1,39 +1,69 @@
 /* Token desain — DESIGN.md §2. Diturunkan dari bahan celup batik pesisir Pekalongan,
    bukan dari palet keraton Solo–Yogya (lihat DESIGN §0). */
 :root {
-  --mori:        #F7F5F0;  /* kain mori sebelum dicelup */
-  --wedelan:     #1B3A5C;  /* indigo/nila tua */
-  --mengkudu:    #B8352C;  /* merah akar mengkudu — aksi utama SAJA */
-  --soga-kuning: #D9A441;  /* kuning kunyit — sorotan, fokus */
-  --nila-muda:   #5B8CA8;  /* tautan, elemen sekunder */
-  --malam:       #14100E;  /* lilin malam */
-  --kertas:      #EAE4D8;  /* permukaan kartu */
+  --mori: #f7f5f0; /* kain mori sebelum dicelup */
+  --wedelan: #1b3a5c; /* indigo/nila tua */
+  --mengkudu: #b8352c; /* merah akar mengkudu — aksi utama SAJA */
+  --soga-kuning: #d9a441; /* kuning kunyit — sorotan, fokus */
+  --nila-muda: #5b8ca8; /* tautan, elemen sekunder */
+  --malam: #14100e; /* lilin malam */
+  --kertas: #eae4d8; /* permukaan kartu */
 
-  --font-display: 'Archivo', system-ui, sans-serif;
-  --font-body:    'Source Serif 4', Georgia, serif;
-  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+  --font-display: "Archivo", system-ui, sans-serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px;
-  --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
 }
-html { color-scheme: light; }
+html {
+  color-scheme: light;
+}
 body {
   background: var(--mori);
   color: var(--malam);
   font-family: var(--font-body);
-  font-size: 19px;      /* DESIGN §2.2 — sebagian pembaca arsip lisan lansia */
+  font-size: 19px; /* DESIGN §2.2 — sebagian pembaca arsip lisan lansia */
   line-height: 1.7;
 }
-h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
-.mono { font-family: var(--font-mono); font-size: 14px; }
-a { color: var(--wedelan); }
-:focus-visible { outline: 3px solid var(--soga-kuning); outline-offset: 2px; }
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+.mono {
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+a {
+  color: var(--wedelan);
+}
+:focus-visible {
+  outline: 3px solid var(--soga-kuning);
+  outline-offset: 2px;
+}
 
 .btn {
-  display: inline-block; padding: var(--s3) var(--s5);
-  border: 1px solid var(--wedelan); border-radius: 0;
-  font-family: var(--font-display); font-size: 15px;
-  text-decoration: none; color: var(--wedelan); background: transparent;
+  display: inline-block;
+  padding: var(--s3) var(--s5);
+  border: 1px solid var(--wedelan);
+  border-radius: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--wedelan);
+  background: transparent;
   min-height: 44px;
 }
-.btn--primary { background: var(--mengkudu); border-color: var(--mengkudu); color: var(--mori); }
+.btn--primary {
+  background: var(--mengkudu);
+  border-color: var(--mengkudu);
+  color: var(--mori);
+}

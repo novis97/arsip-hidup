@@ -29,11 +29,11 @@ jobs:
       - run: pnpm audit --audit-level=high
       - name: Pindai secret yang ter-commit
         uses: gitleaks/gitleaks-action@v2
-        env: { GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' }
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
 
   # ── Gate yang sengaja memblokir. DEVOPS §4. ──
   facade:
-    name: 'Gate: façade video (RULES V-4)'
+    name: "Gate: façade video (RULES V-4)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
       - run: pnpm test:facade
 
   a11y:
-    name: 'Gate: aksesibilitas (WCAG 2.2 AA)'
+    name: "Gate: aksesibilitas (WCAG 2.2 AA)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
       - run: pnpm exec axe dist --exit --tags wcag2a,wcag2aa,wcag21aa,wcag22aa
 
   headers:
-    name: 'Gate: header keamanan'
+    name: "Gate: header keamanan"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
           ! grep -q "Cross-Origin-Embedder-Policy" infra/caddy/Caddyfile
 
   budget:
-    name: 'Gate: budget bundel < 400 KB'
+    name: "Gate: budget bundel < 400 KB"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

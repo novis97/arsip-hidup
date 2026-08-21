@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from "crypto";
 
 /**
  * Token sesi pemutaran — HMAC-SHA256, stateless, berumur pendek.
@@ -15,30 +15,41 @@ export interface PlaybackClaims {
   assetId: string;
   userId: string;
   grantId: string;
-  exp: number;   // epoch detik
+  exp: number; // epoch detik
 }
 
-const b64u = (b: Buffer) => b.toString('base64url');
+const b64u = (b: Buffer) => b.toString("base64url");
 
 function sign(payload: string): string {
   const secret = process.env.PAYLOAD_SECRET;
-  if (!secret) throw new Error('PAYLOAD_SECRET belum diset. Menolak menerbitkan token pemutaran.');
-  return b64u(crypto.createHmac('sha256', secret).update(payload).digest());
+  if (!secret)
+    throw new Error(
+      "PAYLOAD_SECRET belum diset. Menolak menerbitkan token pemutaran.",
+    );
+  return b64u(crypto.createHmac("sha256", secret).update(payload).digest());
 }
 
-export function mintPlaybackToken(claims: Omit<PlaybackClaims, 'exp'>, ttlSeconds: number): string {
+export function mintPlaybackToken(
+  claims: Omit<PlaybackClaims, "exp">,
+  ttlSeconds: number,
+): string {
   if (ttlSeconds > 300) {
     // RULES V-9. Dijaga di sini juga, bukan hanya di endpoint, supaya tidak bisa
     // dilonggarkan diam-diam lewat pemanggil baru.
-    throw new Error(`TTL token ${ttlSeconds}s melebihi batas 300s (RULES V-9).`);
+    throw new Error(
+      `TTL token ${ttlSeconds}s melebihi batas 300s (RULES V-9).`,
+    );
   }
-  const full: PlaybackClaims = { ...claims, exp: Math.floor(Date.now() / 1000) + ttlSeconds };
+  const full: PlaybackClaims = {
+    ...claims,
+    exp: Math.floor(Date.now() / 1000) + ttlSeconds,
+  };
   const payload = b64u(Buffer.from(JSON.stringify(full)));
   return `${payload}.${sign(payload)}`;
 }
 
 export function verifyPlaybackToken(token: string): PlaybackClaims | null {
-  const [payload, sig] = (token ?? '').split('.');
+  const [payload, sig] = (token ?? "").split(".");
   if (!payload || !sig) return null;
 
   const expected = sign(payload);
@@ -48,7 +59,9 @@ export function verifyPlaybackToken(token: string): PlaybackClaims | null {
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
 
   try {
-    const claims = JSON.parse(Buffer.from(payload, 'base64url').toString()) as PlaybackClaims;
+    const claims = JSON.parse(
+      Buffer.from(payload, "base64url").toString(),
+    ) as PlaybackClaims;
     if (claims.exp < Math.floor(Date.now() / 1000)) return null;
     return claims;
   } catch {

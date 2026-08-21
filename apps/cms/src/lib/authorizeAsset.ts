@@ -1,4 +1,4 @@
-import type { Payload } from 'payload';
+import type { Payload } from "payload";
 
 /**
  * Rantai otorisasi tunggal untuk seluruh akses media.
@@ -18,16 +18,27 @@ export async function authorizeAsset(
   user: { id: string | number; role?: string } | null,
 ): Promise<AuthzResult> {
   if (!user) {
-    return { ok: false, status: 401, error: 'Perlu masuk sebagai peneliti terdaftar.', next: '/masuk' };
+    return {
+      ok: false,
+      status: 401,
+      error: "Perlu masuk sebagai peneliti terdaftar.",
+      next: "/masuk",
+    };
   }
 
-  const asset: any = await payload.findByID({ collection: 'assets', id: assetId, depth: 2 }).catch(() => null);
-  if (!asset) return { ok: false, status: 404, error: 'Aset tidak ditemukan.' };
+  const asset: any = await payload
+    .findByID({ collection: "assets", id: assetId, depth: 2 })
+    .catch(() => null);
+  if (!asset) return { ok: false, status: 404, error: "Aset tidak ditemukan." };
 
   // RULES V-13 — master tidak pernah dilayani lewat HTTP, untuk siapa pun,
   // termasuk admin. Yang butuh master mengambilnya dari penyimpanan pelestarian.
   if (asset.isOriginalMaster) {
-    return { ok: false, status: 403, error: 'Master file tidak dilayani melalui web.' };
+    return {
+      ok: false,
+      status: 403,
+      error: "Master file tidak dilayani melalui web.",
+    };
   }
 
   const item: any = asset.archiveItem;
@@ -35,23 +46,28 @@ export async function authorizeAsset(
   // RULES E-3 — penarikan izin narasumber mengalahkan grant yang sudah terbit.
   // Diperiksa SEBELUM grant, karena tidak ada persetujuan apa pun yang membatalkannya.
   if (item?.withdrawalRequested) {
-    return { ok: false, status: 403, error: 'Narasumber menarik izin publikasi materi ini.' };
+    return {
+      ok: false,
+      status: 403,
+      error: "Narasumber menarik izin publikasi materi ini.",
+    };
   }
 
   // RULES E-5 — embargo dihormati mutlak.
   if (item?.embargoUntil && new Date(item.embargoUntil) > new Date()) {
     return {
-      ok: false, status: 403,
-      error: `Materi masih dalam masa embargo hingga ${new Date(item.embargoUntil).toLocaleDateString('id-ID')}.`,
+      ok: false,
+      status: 403,
+      error: `Materi masih dalam masa embargo hingga ${new Date(item.embargoUntil).toLocaleDateString("id-ID")}.`,
     };
   }
 
-  if (asset.tier === 'public') {
-    return { ok: true, asset, item, grantId: 'public' };
+  if (asset.tier === "public") {
+    return { ok: true, asset, item, grantId: "public" };
   }
 
   const grants = await payload.find({
-    collection: 'access-grants',
+    collection: "access-grants",
     depth: 0,
     where: {
       and: [
@@ -62,25 +78,34 @@ export async function authorizeAsset(
     },
   });
 
-  const grant = grants.docs.find((g: any) =>
-    (g.scopeType === 'asset' && g.scopeId === String(assetId)) ||
-    (g.scopeType === 'item' && g.scopeId === String(item?.id)) ||
-    (g.scopeType === 'collection' && g.scopeId === String(item?.collection?.id ?? item?.collection)));
+  const grant = grants.docs.find(
+    (g: any) =>
+      (g.scopeType === "asset" && g.scopeId === String(assetId)) ||
+      (g.scopeType === "item" && g.scopeId === String(item?.id)) ||
+      (g.scopeType === "collection" &&
+        g.scopeId === String(item?.collection?.id ?? item?.collection)),
+  );
 
   if (!grant) {
     // Pesan buntu selalu diberi jalan keluar (DESIGN §5.2).
     return {
-      ok: false, status: 403,
-      error: 'Belum ada persetujuan akses untuk materi ini.',
-      next: '/terlibat/akses-arsip',
+      ok: false,
+      status: 403,
+      error: "Belum ada persetujuan akses untuk materi ini.",
+      next: "/terlibat/akses-arsip",
     };
   }
 
-  if ((grant as any).maxDownloads && (grant as any).downloadCount >= (grant as any).maxDownloads) {
+  if (
+    (grant as any).maxDownloads &&
+    (grant as any).downloadCount >= (grant as any).maxDownloads
+  ) {
     return {
-      ok: false, status: 429,
-      error: 'Kuota unduhan untuk persetujuan akses ini sudah habis. Hubungi tim arsip.',
-      next: '/kontak',
+      ok: false,
+      status: 429,
+      error:
+        "Kuota unduhan untuk persetujuan akses ini sudah habis. Hubungi tim arsip.",
+      next: "/kontak",
     };
   }
 

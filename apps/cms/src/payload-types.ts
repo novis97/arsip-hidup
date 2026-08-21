@@ -13,53 +13,53 @@
  * via the `definition` "supportedTimezones".
  */
 export type SupportedTimezones =
-  | 'Pacific/Midway'
-  | 'Pacific/Niue'
-  | 'Pacific/Honolulu'
-  | 'Pacific/Rarotonga'
-  | 'America/Anchorage'
-  | 'Pacific/Gambier'
-  | 'America/Los_Angeles'
-  | 'America/Tijuana'
-  | 'America/Denver'
-  | 'America/Phoenix'
-  | 'America/Chicago'
-  | 'America/Guatemala'
-  | 'America/New_York'
-  | 'America/Bogota'
-  | 'America/Caracas'
-  | 'America/Santiago'
-  | 'America/Buenos_Aires'
-  | 'America/Sao_Paulo'
-  | 'Atlantic/South_Georgia'
-  | 'Atlantic/Azores'
-  | 'Atlantic/Cape_Verde'
-  | 'Europe/London'
-  | 'Europe/Berlin'
-  | 'Africa/Lagos'
-  | 'Europe/Athens'
-  | 'Africa/Cairo'
-  | 'Europe/Moscow'
-  | 'Asia/Riyadh'
-  | 'Asia/Dubai'
-  | 'Asia/Baku'
-  | 'Asia/Karachi'
-  | 'Asia/Tashkent'
-  | 'Asia/Calcutta'
-  | 'Asia/Dhaka'
-  | 'Asia/Almaty'
-  | 'Asia/Jakarta'
-  | 'Asia/Bangkok'
-  | 'Asia/Shanghai'
-  | 'Asia/Singapore'
-  | 'Asia/Tokyo'
-  | 'Asia/Seoul'
-  | 'Australia/Brisbane'
-  | 'Australia/Sydney'
-  | 'Pacific/Guam'
-  | 'Pacific/Noumea'
-  | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | "Pacific/Midway"
+  | "Pacific/Niue"
+  | "Pacific/Honolulu"
+  | "Pacific/Rarotonga"
+  | "America/Anchorage"
+  | "Pacific/Gambier"
+  | "America/Los_Angeles"
+  | "America/Tijuana"
+  | "America/Denver"
+  | "America/Phoenix"
+  | "America/Chicago"
+  | "America/Guatemala"
+  | "America/New_York"
+  | "America/Bogota"
+  | "America/Caracas"
+  | "America/Santiago"
+  | "America/Buenos_Aires"
+  | "America/Sao_Paulo"
+  | "Atlantic/South_Georgia"
+  | "Atlantic/Azores"
+  | "Atlantic/Cape_Verde"
+  | "Europe/London"
+  | "Europe/Berlin"
+  | "Africa/Lagos"
+  | "Europe/Athens"
+  | "Africa/Cairo"
+  | "Europe/Moscow"
+  | "Asia/Riyadh"
+  | "Asia/Dubai"
+  | "Asia/Baku"
+  | "Asia/Karachi"
+  | "Asia/Tashkent"
+  | "Asia/Calcutta"
+  | "Asia/Dhaka"
+  | "Asia/Almaty"
+  | "Asia/Jakarta"
+  | "Asia/Bangkok"
+  | "Asia/Shanghai"
+  | "Asia/Singapore"
+  | "Asia/Tokyo"
+  | "Asia/Seoul"
+  | "Australia/Brisbane"
+  | "Australia/Sydney"
+  | "Pacific/Guam"
+  | "Pacific/Noumea"
+  | "Pacific/Auckland"
+  | "Pacific/Fiji";
 
 export interface Config {
   auth: {
@@ -69,45 +69,50 @@ export interface Config {
   collections: {
     users: User;
     collections: Collection;
-    'archive-items': ArchiveItem;
+    "archive-items": ArchiveItem;
     assets: Asset;
     transcripts: Transcript;
     narasumber: Narasumber;
     stories: Story;
-    'batik-businesses': BatikBusiness;
+    "batik-businesses": BatikBusiness;
     themes: Theme;
     locations: Location;
-    'timeline-events': TimelineEvent;
-    'color-map-entries': ColorMapEntry;
-    'access-requests': AccessRequest;
-    'access-grants': AccessGrant;
-    'audit-logs': AuditLog;
-    'payload-kv': PayloadKv;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
+    "timeline-events": TimelineEvent;
+    "color-map-entries": ColorMapEntry;
+    "access-requests": AccessRequest;
+    "access-grants": AccessGrant;
+    "audit-logs": AuditLog;
+    "payload-kv": PayloadKv;
+    "payload-locked-documents": PayloadLockedDocument;
+    "payload-preferences": PayloadPreference;
+    "payload-migrations": PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     collections: CollectionsSelect<false> | CollectionsSelect<true>;
-    'archive-items': ArchiveItemsSelect<false> | ArchiveItemsSelect<true>;
+    "archive-items": ArchiveItemsSelect<false> | ArchiveItemsSelect<true>;
     assets: AssetsSelect<false> | AssetsSelect<true>;
     transcripts: TranscriptsSelect<false> | TranscriptsSelect<true>;
     narasumber: NarasumberSelect<false> | NarasumberSelect<true>;
     stories: StoriesSelect<false> | StoriesSelect<true>;
-    'batik-businesses': BatikBusinessesSelect<false> | BatikBusinessesSelect<true>;
+    "batik-businesses":
+      BatikBusinessesSelect<false> | BatikBusinessesSelect<true>;
     themes: ThemesSelect<false> | ThemesSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
-    'timeline-events': TimelineEventsSelect<false> | TimelineEventsSelect<true>;
-    'color-map-entries': ColorMapEntriesSelect<false> | ColorMapEntriesSelect<true>;
-    'access-requests': AccessRequestsSelect<false> | AccessRequestsSelect<true>;
-    'access-grants': AccessGrantsSelect<false> | AccessGrantsSelect<true>;
-    'audit-logs': AuditLogsSelect<false> | AuditLogsSelect<true>;
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+    "timeline-events": TimelineEventsSelect<false> | TimelineEventsSelect<true>;
+    "color-map-entries":
+      ColorMapEntriesSelect<false> | ColorMapEntriesSelect<true>;
+    "access-requests": AccessRequestsSelect<false> | AccessRequestsSelect<true>;
+    "access-grants": AccessGrantsSelect<false> | AccessGrantsSelect<true>;
+    "audit-logs": AuditLogsSelect<false> | AuditLogsSelect<true>;
+    "payload-kv": PayloadKvSelect<false> | PayloadKvSelect<true>;
+    "payload-locked-documents":
+      PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    "payload-preferences":
+      PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    "payload-migrations":
+      PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
     defaultIDType: number;
@@ -150,7 +155,7 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   name: string;
-  role: 'admin' | 'editor' | 'archivist' | 'reviewer' | 'researcher' | 'member';
+  role: "admin" | "editor" | "archivist" | "reviewer" | "researcher" | "member";
   mfaEnabled?: boolean | null;
   mfaSecret?: string | null;
   institution?: string | null;
@@ -176,7 +181,7 @@ export interface User {
       }[]
     | null;
   password?: string | null;
-  collection: 'users';
+  collection: "users";
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -196,8 +201,8 @@ export interface Collection {
         version: number;
         [k: string]: unknown;
       }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      direction: ("ltr" | "rtl") | null;
+      format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
       indent: number;
       version: number;
     };
@@ -206,7 +211,7 @@ export interface Collection {
   region?: string | null;
   periodStart?: number | null;
   periodEnd?: number | null;
-  status?: ('planned' | 'active' | 'completed') | null;
+  status?: ("planned" | "active" | "completed") | null;
   /**
    * HANYA mitra dan pendana yang benar-benar terlibat. Jangan cantumkan logo lembaga yang belum bermitra (RULES §1.6).
    */
@@ -218,7 +223,7 @@ export interface Collection {
     | null;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -248,14 +253,14 @@ export interface ArchiveItem {
         version: number;
         [k: string]: unknown;
       }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      direction: ("ltr" | "rtl") | null;
+      format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
       indent: number;
       version: number;
     };
     [k: string]: unknown;
   } | null;
-  videoSource: 'youtube' | 'internal' | 'none';
+  videoSource: "youtube" | "internal" | "none";
   /**
    * ID 11 karakter saja (dQw4w9WgXcQ), bukan URL penuh.
    */
@@ -264,7 +269,7 @@ export interface ArchiveItem {
    * WAJIB dari cdn.arsiphidup.id. Hotlink ke i.ytimg.com merusak façade.
    */
   thumbnailUrl: string;
-  youtubePrivacy?: ('public' | 'unlisted') | null;
+  youtubePrivacy?: ("public" | "unlisted") | null;
   internalAsset?: (number | null) | Asset;
   /**
    * Mirror publik di R2 untuk panel fallback (RULES V-11).
@@ -273,8 +278,8 @@ export interface ArchiveItem {
   durationSeconds: number;
   recordedAt: string;
   recordedPlace: string;
-  language: ('id' | 'jv' | 'en')[];
-  accessTier: 'public' | 'restricted';
+  language: ("id" | "jv" | "en")[];
+  accessTier: "public" | "restricted";
   /**
    * Sebelum tanggal ini hanya metadata yang tampil (RULES E-5).
    */
@@ -293,7 +298,7 @@ export interface ArchiveItem {
   contributors?:
     | {
         narasumber: number | Narasumber;
-        role: 'narasumber' | 'pewawancara' | 'juru-kamera' | 'penerjemah';
+        role: "narasumber" | "pewawancara" | "juru-kamera" | "penerjemah";
         id?: string | null;
       }[]
     | null;
@@ -302,7 +307,7 @@ export interface ArchiveItem {
   featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -312,8 +317,15 @@ export interface Asset {
   id: number;
   archiveItem?: (number | null) | ArchiveItem;
   kind:
-    'video_full' | 'video_highlight' | 'video_story' | 'audio' | 'photo' | 'photo_raw' | 'document' | 'transcript_file';
-  tier: 'public' | 'restricted';
+    | "video_full"
+    | "video_highlight"
+    | "video_story"
+    | "audio"
+    | "photo"
+    | "photo_raw"
+    | "document"
+    | "transcript_file";
+  tier: "public" | "restricted";
   altText?: string | null;
   caption?: string | null;
   /**
@@ -352,7 +364,7 @@ export interface Narasumber {
    */
   initials?: string | null;
   slug: string;
-  honorific?: ('Ibu' | 'Bapak' | 'Mbah' | 'Nyai' | '-') | null;
+  honorific?: ("Ibu" | "Bapak" | "Mbah" | "Nyai" | "-") | null;
   bioShort?: string | null;
   bioLong?: {
     root: {
@@ -362,8 +374,8 @@ export interface Narasumber {
         version: number;
         [k: string]: unknown;
       }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      direction: ("ltr" | "rtl") | null;
+      format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
       indent: number;
       version: number;
     };
@@ -373,21 +385,30 @@ export interface Narasumber {
    * TAHUN saja. Tanggal lahir lengkap tidak dibutuhkan dan tidak disimpan.
    */
   birthYear?: number | null;
-  roleTags?: ('pembatik' | 'pewarna-alami' | 'juragan' | 'pedagang' | 'tukang-cap' | 'pengurus-komunitas')[] | null;
+  roleTags?:
+    | (
+        | "pembatik"
+        | "pewarna-alami"
+        | "juragan"
+        | "pedagang"
+        | "tukang-cap"
+        | "pengurus-komunitas"
+      )[]
+    | null;
   location?: (number | null) | Location;
   isDeceased?: boolean | null;
   deceasedYear?: number | null;
   /**
    * Dihormati di SETIAP tempat: judul, alt, meta OG, schema, URL. Bocor di satu titik = tidak ada anonimisasi.
    */
-  displayConsent: 'full_name' | 'initials' | 'anonymous';
+  displayConsent: "full_name" | "initials" | "anonymous";
   /**
    * Platform memfasilitasi perkenalan; kontak tidak pernah diberikan langsung (RULES E-2).
    */
   contactViaPlatformOnly?: boolean | null;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -399,7 +420,7 @@ export interface Location {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -411,7 +432,7 @@ export interface Theme {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -420,8 +441,8 @@ export interface Theme {
 export interface Transcript {
   id: number;
   archiveItem: number | ArchiveItem;
-  language?: ('id' | 'jv' | 'en') | null;
-  format?: ('plain' | 'timecoded' | 'vtt') | null;
+  language?: ("id" | "jv" | "en") | null;
+  format?: ("plain" | "timecoded" | "vtt") | null;
   body: string;
   segments?:
     | {
@@ -439,7 +460,7 @@ export interface Transcript {
   /**
    * Transkrip boleh publik meski videonya terbatas — penemuan maksimal, paparan minimal.
    */
-  visibility?: ('public' | 'restricted') | null;
+  visibility?: ("public" | "restricted") | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -453,7 +474,7 @@ export interface Story {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -465,7 +486,7 @@ export interface BatikBusiness {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -477,7 +498,7 @@ export interface TimelineEvent {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -489,7 +510,7 @@ export interface ColorMapEntry {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -501,7 +522,7 @@ export interface AccessRequest {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  _status?: ("draft" | "published") | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -511,7 +532,7 @@ export interface AccessGrant {
   id: number;
   accessRequest: number | AccessRequest;
   user: number | User;
-  scopeType: 'collection' | 'item' | 'asset';
+  scopeType: "collection" | "item" | "asset";
   scopeId: string;
   grantedAt: string;
   /**
@@ -538,18 +559,18 @@ export interface AuditLog {
    */
   actorHash?: string | null;
   eventType:
-    | 'video.play'
-    | 'video.complete'
-    | 'asset.signed_url_issued'
-    | 'asset.download'
-    | 'access_request.submitted'
-    | 'access_grant.approved'
-    | 'access_grant.revoked'
-    | 'login.success'
-    | 'login.failed'
-    | 'content.published'
-    | 'content.unpublished'
-    | 'narasumber.withdrawal';
+    | "video.play"
+    | "video.complete"
+    | "asset.signed_url_issued"
+    | "asset.download"
+    | "access_request.submitted"
+    | "access_grant.approved"
+    | "access_grant.revoked"
+    | "login.success"
+    | "login.failed"
+    | "content.published"
+    | "content.unpublished"
+    | "narasumber.withdrawal";
   targetType?: string | null;
   targetId?: string | null;
   metadata?:
@@ -564,7 +585,7 @@ export interface AuditLog {
   /**
    * Menyimpan semuanya selamanya menciptakan liability yang tidak dibutuhkan.
    */
-  retentionClass: 'short' | 'long';
+  retentionClass: "short" | "long";
   updatedAt: string;
   createdAt: string;
 }
@@ -593,68 +614,68 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
+        relationTo: "users";
         value: number | User;
       } | null)
     | ({
-        relationTo: 'collections';
+        relationTo: "collections";
         value: number | Collection;
       } | null)
     | ({
-        relationTo: 'archive-items';
+        relationTo: "archive-items";
         value: number | ArchiveItem;
       } | null)
     | ({
-        relationTo: 'assets';
+        relationTo: "assets";
         value: number | Asset;
       } | null)
     | ({
-        relationTo: 'transcripts';
+        relationTo: "transcripts";
         value: number | Transcript;
       } | null)
     | ({
-        relationTo: 'narasumber';
+        relationTo: "narasumber";
         value: number | Narasumber;
       } | null)
     | ({
-        relationTo: 'stories';
+        relationTo: "stories";
         value: number | Story;
       } | null)
     | ({
-        relationTo: 'batik-businesses';
+        relationTo: "batik-businesses";
         value: number | BatikBusiness;
       } | null)
     | ({
-        relationTo: 'themes';
+        relationTo: "themes";
         value: number | Theme;
       } | null)
     | ({
-        relationTo: 'locations';
+        relationTo: "locations";
         value: number | Location;
       } | null)
     | ({
-        relationTo: 'timeline-events';
+        relationTo: "timeline-events";
         value: number | TimelineEvent;
       } | null)
     | ({
-        relationTo: 'color-map-entries';
+        relationTo: "color-map-entries";
         value: number | ColorMapEntry;
       } | null)
     | ({
-        relationTo: 'access-requests';
+        relationTo: "access-requests";
         value: number | AccessRequest;
       } | null)
     | ({
-        relationTo: 'access-grants';
+        relationTo: "access-grants";
         value: number | AccessGrant;
       } | null)
     | ({
-        relationTo: 'audit-logs';
+        relationTo: "audit-logs";
         value: number | AuditLog;
       } | null);
   globalSlug?: string | null;
   user: {
-    relationTo: 'users';
+    relationTo: "users";
     value: number | User;
   };
   updatedAt: string;
@@ -667,7 +688,7 @@ export interface PayloadLockedDocument {
 export interface PayloadPreference {
   id: number;
   user: {
-    relationTo: 'users';
+    relationTo: "users";
     value: number | User;
   };
   key?: string | null;
@@ -1013,7 +1034,7 @@ export interface CollectionsWidget {
   data?: {
     [k: string]: unknown;
   };
-  width: 'full';
+  width: "full";
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1023,7 +1044,6 @@ export interface Auth {
   [k: string]: unknown;
 }
 
-
-declare module 'payload' {
+declare module "payload" {
   export interface GeneratedTypes extends Config {}
 }
