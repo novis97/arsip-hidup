@@ -68,8 +68,10 @@ export default buildConfig({
     s3Storage({
       collections: {
         assets: {
-          // Bucket ditentukan per-dokumen oleh tier. Materi terbatas
-          // TIDAK PERNAH masuk bucket publik (RULES V-9).
+          // FASE 1: semua aset menuju bucket publik; routing per-tier belum ada.
+          // Karena itu Assets mengunci tier ke "public" agar metadata sesuai
+          // dengan lokasi objek yang sebenarnya.
+          // TODO(T3.x): tambahkan routing dua bucket untuk aset terbatas.
           generateFileURL: ({ filename }) =>
             `${process.env.PUBLIC_CDN_URL}/${filename}`,
         },

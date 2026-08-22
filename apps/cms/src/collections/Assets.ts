@@ -8,6 +8,32 @@ export const Assets: CollectionConfig = {
     staticDir: undefined,
     mimeTypes: ["image/*", "video/*", "audio/*", "application/pdf"],
   },
+  hooks: {
+    beforeValidate: [
+      ({ data, req }) => {
+        const uploadedFilename = req.file?.name ?? data?.filename;
+
+        if (!uploadedFilename) return data;
+
+        return {
+          ...data,
+          storageBucket: process.env.R2_BUCKET_PUBLIC,
+          storageKey: uploadedFilename,
+        };
+      },
+    ],
+    beforeChange: [
+      ({ data }) => {
+        if (!data.filename) return data;
+
+        return {
+          ...data,
+          storageBucket: process.env.R2_BUCKET_PUBLIC,
+          storageKey: data.filename,
+        };
+      },
+    ],
+  },
   admin: { group: "Arsip" },
   access: {
     // Aset terbatas tidak pernah terbaca publik. Aksesnya hanya lewat endpoint presigned.
@@ -38,10 +64,26 @@ export const Assets: CollectionConfig = {
       type: "select",
       required: true,
       defaultValue: "public",
-      options: ["public", "restricted"],
+      // FASE 1: hanya bucket publik yang tersambung. Opsi "restricted"
+      // dikunci agar tidak ada aset yang ditandai terbatas tapi tersimpan
+      // di bucket publik — data yang berbohong lebih buruk daripada
+      // fitur yang belum ada.
+      // TODO(T3.x): buka kembali setelah routing dua bucket + presigned
+      // URL tersedia.
+      options: ["public"],
     },
-    { name: "storageBucket", type: "text", required: true },
-    { name: "storageKey", type: "text", required: true },
+    {
+      name: "storageBucket",
+      type: "text",
+      required: true,
+      admin: { readOnly: true },
+    },
+    {
+      name: "storageKey",
+      type: "text",
+      required: true,
+      admin: { readOnly: true },
+    },
     { name: "fileSizeBytes", type: "number" },
     { name: "durationSeconds", type: "number" },
     {
