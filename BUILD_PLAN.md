@@ -8,11 +8,15 @@ Muat `AGENTS.md` di setiap sesi. Jangan pernah memuat seluruh `docs/` sekaligus.
 
 Estimasi memakai satuan **sesi** (± 1–3 jam kerja terfokus), bukan hari, karena kecepatan sangat bergantung alat.
 
-## Status eksekusi — 21 Agustus 2026
+## Status eksekusi — 22 Agustus 2026
 
-- **T0.1 selesai** di commit `2e7a5ab`: dependensi ter-resolve dan `pnpm-lock.yaml` tersedia.
-- **T0.2 selesai** melalui commit `3a9a281`, `525c4e5`, dan `62f2bd2`: boilerplate tersedia, import map admin lengkap, konfigurasi lokal dimuat dari root monorepo, dan `/admin/login` merespons HTTP 200 tanpa error import map.
-- Tiket aktif berikutnya adalah **T0.3**. Delapan error typecheck scaffold yang ditemukan saat verifikasi T0.2 dicatat sebagai utang teknis terpisah dan tidak boleh diperbaiki "sekalian", terutama yang menyentuh zona tanpa vibe.
+- **Fase 0 tuntas.**
+- **T1.1 selesai:** field `Collections`, `Assets`, dan `Transcripts` beserta migrasinya tersedia.
+- **T1.1b selesai:** konfigurasi lingkungan untuk skrip lokal dimuat dari root monorepo.
+- **T1.1c selesai:** skrip bootstrap untuk membuat admin pertama tersedia.
+- **T1.1d selesai:** adapter storage R2 diterapkan pada `Assets`; pada Fase 1 hanya bucket publik yang digunakan.
+- **T1.1e selesai** di commit `3576b77`: origin panel admin ditambahkan ke allowlist CSRF.
+- Tiket aktif berikutnya adalah **T1.1f — pembaruan dokumentasi keputusan dan temuan Fase 1 awal**.
 
 ---
 
@@ -59,12 +63,16 @@ Tidak ada fitur di fase ini. Tujuannya membuat lantai yang keras: dependensi ter
 
 ---
 
-## Fase 1 — Jalur arsip publik (6 tiket)
+## Fase 1 — Jalur arsip publik (10 tiket)
 Satu halaman arsip yang benar-benar benar, dari ujung ke ujung. Jangan menambah halaman lain sebelum fase ini tuntas.
 
 | Tiket | Isi | Konteks | Verifikasi | Sesi |
 |---|---|---|---|---|
-| T1.1 | Lengkapi field `Collections`, `Transcripts`, `Assets` sesuai skema | `docs/SCHEMA.md` §1,3,4 | `pnpm typecheck` + terlihat di `/admin` | 1 |
+| **T1.1 — selesai** | Lengkapi field `Collections`, `Transcripts`, dan `Assets` sesuai skema, beserta migrasinya | `docs/SCHEMA.md` §1,3,4 | `pnpm typecheck` + terlihat di `/admin` | 1 |
+| **T1.1b — selesai** | Muat konfigurasi lingkungan dari root monorepo untuk skrip lokal | konfigurasi CMS dan skrip lokal | skrip lokal membaca konfigurasi root | — |
+| **T1.1c — selesai** | Sediakan skrip bootstrap untuk membuat admin pertama | konfigurasi CMS dan skrip bootstrap | admin pertama dapat dibuat dari database bersih | — |
+| **T1.1d — selesai** | Terapkan adapter storage R2 pada `Assets`, menggunakan bucket publik saja selama Fase 1 | konfigurasi CMS dan `Assets` | unggah aset publik tersimpan di R2 | — |
+| **T1.1e — selesai** | Masukkan origin panel admin ke allowlist CSRF pada setiap lingkungan | `apps/cms/payload.config.ts`, `docs/SECURITY.md` §5 | request bertulis dari panel admin terautentikasi | — |
 | T1.2 | API key build + `lib/payload.ts` mengambil data nyata | `apps/web/src/lib/payload.ts` | `pnpm build` menghasilkan 1 halaman arsip | 1 |
 | T1.3 | Halaman arsip: Kartu Register, deskripsi, transkrip di HTML awal | `docs/DESIGN.md` §3–4, `docs/GEO.md` §1–2 | `curl … \| grep "Transkrip lengkap"` | 1–2 |
 | **T1.4** | **Pemutar façade lolos gate** | `docs/VIDEO_EMBED.md` §2,4 | `pnpm test:facade` (5 uji hijau) | 1–2 |
@@ -90,16 +98,27 @@ Satu halaman arsip yang benar-benar benar, dari ujung ke ujung. Jangan menambah 
 
 ---
 
-## Fase 3 — Akses & tata kelola (6 tiket)
+## Fase 3 — Akses & tata kelola (7 tiket)
 
 | Tiket | Isi | Konteks | Verifikasi |
 |---|---|---|---|
-| T3.1 | MFA TOTP: enrolment + verifikasi | `docs/SECURITY.md` §4 | admin tanpa MFA ditolak login |
+| T3.1 | MFA TOTP: pendaftaran perangkat + verifikasi kode di beforeLogin; setelah itu kembalikan "admin" ke MFA_REQUIRED_ROLES | `docs/SECURITY.md` §4, `docs/RULES.md` §1 | admin tanpa verifikasi TOTP ditolak login; "admin" kembali tercantum dalam MFA_REQUIRED_ROLES |
 | T3.2 | `AccessRequests` lengkap + notifikasi email | `docs/SCHEMA.md` §13, `docs/PRD.md` §5.2 | alur draft→submitted→approved jalan |
 | T3.3 | Halaman peneliti + pemutar HLS di aplikasi Payload | `docs/VIDEO_EMBED.md` §5.4 | video terbatas main setelah grant |
 | T3.4 | Refresh sesi detik ke-240 + overlay watermark | `docs/VIDEO_EMBED.md` §5.1–5.3 | video 60 menit tidak putus di menit ke-6 |
 | T3.5 | Alur penarikan izin narasumber | `docs/RULES.md` E-3 | centang `withdrawalRequested` → hilang dari publik & tertolak di API |
 | T3.6 | Endpoint `/api/audit` + retensi terjadwal | `docs/SECURITY.md` §7 | tidak ada IP mentah tersimpan |
+| T3.7 | Tangani unggah aset yang tidak atomik agar dokumen `Assets` tidak menunjuk objek R2 yang tidak ada | konfigurasi storage R2 dan koleksi `Assets` | kegagalan unggah tidak meninggalkan dokumen siap pakai yang menunjuk objek tak ada |
+
+**VPS TIDAK BOLEH ONLINE sebelum T3.1 selesai.**
+
+**Temuan T3.7:** kegagalan unggah ke R2 melempar error, tetapi dokumen `Assets` sudah tersimpan lebih dahulu. Akibatnya, dapat terbentuk entri yang menunjuk objek yang tidak ada.
+
+Opsi penanganan yang sudah diidentifikasi:
+
+- unggah → `HEAD` → buat dokumen;
+- status `pending` / `ready` / `failed`; atau
+- rekonsiliasi `HEAD` secara berkala.
 
 **T3.5 adalah uji integritas terpenting di proyek ini.** Kalau penarikan izin tidak benar-benar bekerja end-to-end, seluruh janji etis situs ini kosong.
 

@@ -1,5 +1,38 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## Keputusan dan temuan Fase 1 awal — 22 Agustus 2026
+
+### Keputusan: pengecualian sementara peran `admin` dari kewajiban MFA
+
+Yusuf memutuskan bahwa peran `admin` untuk sementara dikecualikan dari `MFA_REQUIRED_ROLES`. Alur TOTP belum dibangun; `mfaSecret` dan `mfaEnabled` masih berupa field tanpa implementasi pendaftaran perangkat maupun verifikasi kode. Tanpa pengecualian ini, tidak seorang pun dapat memasuki panel admin dari database bersih.
+
+Keputusan ini secara sengaja melonggarkan RULES §1.4. Risiko yang diterima: CMS untuk sementara hanya dilindungi email dan password.
+
+**Syarat mutlak: VPS TIDAK BOLEH ONLINE sebelum T3.1 selesai.**
+
+Pemulihan dilakukan dalam T3.1: bangun alur TOTP penuh, termasuk pendaftaran perangkat dan verifikasi kode, lalu kembalikan `admin` ke `MFA_REQUIRED_ROLES`.
+
+### Keputusan: kepemilikan sementara akun Cloudflare
+
+Akun Cloudflare yang menampung Pages, R2, DNS, dan domain `arsiphidup.id` untuk sementara atas nama pribadi developer, pada akun kerja yang juga menampung proyek klien lain. Akun tersebut bukan atas nama PIHAK PERTAMA.
+
+R2 dibutuhkan untuk foto pada Demo 1. Client belum siap secara administratif dan menyerahkan pengelolaan sepenuhnya kepada developer.
+
+Risiko yang diterima:
+
+- bus factor 1;
+- biaya berulang ditalangi secara pribadi;
+- serah terima O-6 belum lengkap; dan
+- pemindahan kelak harus dilakukan per sumber daya karena akun yang sama berisi proyek lain.
+
+**G-7 tetap TERBUKA.** Tenggat pemindahan seluruh sumber daya ke kepemilikan PIHAK PERTAMA adalah sebelum Demo 2.
+
+### Temuan teknis: origin panel admin wajib masuk allowlist CSRF
+
+Commit `3576b77` memperbaiki autentikasi request bertulis dari panel admin. Ketika origin panel tidak tercantum dalam allowlist `csrf`, request `POST` dari browser diproses sebagai anonim: `req.user` kosong, access control menolak request, dan Payload mengembalikan 403 dengan pesan generik yang tidak menunjukkan bahwa penyebabnya adalah origin CSRF.
+
+Allowlist `csrf` sekarang mencakup situs publik, origin server Payload yang menjadi origin panel admin, serta `http://localhost:3000` pada lingkungan nonproduksi. Setiap lingkungan wajib memasukkan origin panel adminnya dengan kecocokan persis sampai scheme, host, dan port.
+
 ## Penyelarasan pra-implementasi — 21 Agustus 2026
 
 - Versi front-end diselaraskan ke dependensi aktual: Astro 7.2.4, bukan Astro 5.

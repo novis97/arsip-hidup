@@ -86,6 +86,19 @@ Catatan: `Cross-Origin-Embedder-Policy: require-corp` **jangan** dipasang — ak
 - Tier aset diperiksa di server setiap permintaan, tidak pernah dari parameter klien.
 - Endpoint presigned URL: rate limit ketat, kuota per grant, dan log setiap penerbitan.
 
+### 5.1 Origin panel admin dan allowlist CSRF
+
+Origin panel admin wajib masuk allowlist `csrf` untuk setiap lingkungan. Kecocokannya harus persis sampai scheme, host, dan port; misalnya, `http://localhost:3000` dan `https://localhost:3000` adalah origin yang berbeda.
+
+Jika origin panel admin tidak terdaftar, request `POST` dari browser diproses sebagai anonim. `req.user` kosong, access control menolak request, dan responsnya adalah 403 dengan pesan generik yang tidak menyebut bahwa origin CSRF merupakan penyebabnya.
+
+`cors` dan `csrf` dalam `payload.config.ts` adalah dua daftar terpisah dengan tujuan berbeda. Keduanya wajib ditinjau ketika origin baru ditambahkan:
+
+- `cors` mengatur origin yang boleh melakukan permintaan lintas origin dan saat ini hanya memuat `PUBLIC_SITE_URL`;
+- `csrf` melindungi request berbasis cookie dan disusun dari tiga origin: `PUBLIC_SITE_URL`, `PAYLOAD_PUBLIC_SERVER_URL`, serta `http://localhost:3000` pada lingkungan nonproduksi.
+
+Perbedaan isi kedua daftar tersebut disengaja. Daftar itu tidak boleh disamakan tanpa meninjau tujuan dan kebutuhan masing-masing.
+
 ## 6. Validasi input & keluaran
 - Validasi skema (Zod) di batas API. Allowlist, bukan blocklist.
 - `youtube_id` divalidasi regex `^[A-Za-z0-9_-]{11}$` **sebelum** masuk `src` iframe. Tanpa ini, admin yang akunnya dibajak bisa menyuntikkan URL sembarang ke dalam iframe di setiap halaman arsip.
