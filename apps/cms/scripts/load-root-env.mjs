@@ -9,5 +9,3 @@ const rootEnvPath = fileURLToPath(new URL("../../../.env", import.meta.url));
 if (existsSync(rootEnvPath)) {
   process.loadEnvFile(rootEnvPath);
 }
-
-await import("../node_modules/next/dist/bin/next");
