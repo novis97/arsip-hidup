@@ -24,6 +24,12 @@ import { mediaEndpoints } from "./src/endpoints/mediaPlayback";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const csrfOrigins = [
+  process.env.PUBLIC_SITE_URL,
+  process.env.PAYLOAD_PUBLIC_SERVER_URL,
+  ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:3000"]),
+].filter((origin): origin is string => Boolean(origin));
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -42,7 +48,9 @@ export default buildConfig({
 
   // CORS/CSRF ketat — hanya domain kita (SECURITY §5).
   cors: [process.env.PUBLIC_SITE_URL!].filter(Boolean),
-  csrf: [process.env.PUBLIC_SITE_URL!].filter(Boolean),
+  // Origin panel admin wajib terdaftar agar Payload menerima cookie auth
+  // pada request bertulis; tanpa ini POST dari panel diproses sebagai anonim.
+  csrf: csrfOrigins,
 
   collections: [
     Users,
