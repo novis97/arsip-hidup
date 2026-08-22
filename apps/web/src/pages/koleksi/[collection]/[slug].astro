@@ -6,9 +6,25 @@ import { getPublishedItems } from '../../../lib/payload';
 
 export async function getStaticPaths() {
   const items = await getPublishedItems();
-  return items.map((item: any) => ({
-    params: { collection: item.collection.slug, slug: item.slug },
-    props: { item },
+  const payloadUrl = import.meta.env.PAYLOAD_URL ?? 'http://localhost:3000';
+
+  return Promise.all(items.map(async (item: any) => {
+    const transcriptUrl = new URL('/api/transcripts', payloadUrl);
+    transcriptUrl.searchParams.set('where[archiveItem][equals]', String(item.id));
+    transcriptUrl.searchParams.set('where[visibility][equals]', 'public');
+    transcriptUrl.searchParams.set('limit', '1');
+    transcriptUrl.searchParams.set('depth', '0');
+
+    const response = await fetch(transcriptUrl);
+    if (!response.ok) {
+      throw new Error(`Gagal mengambil transkrip publik untuk arsip ${item.slug}.`);
+    }
+    const result = await response.json();
+
+    return {
+      params: { collection: item.collection.slug, slug: item.slug },
+      props: { item: { ...item, transcript: result.docs[0] } },
+    };
   }));
 }
 const { item } = Astro.props;
@@ -24,13 +40,57 @@ const namaTampil =
   nama.displayConsent === 'initials' ? nama.initials :
   'Narasumber (anonim)';
 
+const polaNamaAsli = nama?.displayName
+  ? new RegExp(nama.displayName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
+  : undefined;
+const hormatiDisplayConsent = (teks: string | null | undefined) => {
+  if (!teks || nama?.displayConsent === 'full_name' || !polaNamaAsli) return teks;
+  return teks.replace(polaNamaAsli, namaTampil);
+};
+
+const judulTampil = hormatiDisplayConsent(item.title) ?? 'Arsip sejarah lisan';
+const ringkasanTampil = hormatiDisplayConsent(item.summary);
+const deskripsiTampil = hormatiDisplayConsent(item.description ?? item.summary);
+const transkripTampil = hormatiDisplayConsent(item.transcript?.body);
+
+const bahasaNames: Record<string, string> = {
+  id: 'Indonesia',
+  jv: 'Jawa',
+};
+const bahasaTampil = item.language.map((kode: string) => bahasaNames[kode] ?? kode);
+const daftarBahasa = bahasaTampil.length > 1
+  ? `${bahasaTampil.slice(0, -1).join(', ')} dan ${bahasaTampil.at(-1)}`
+  : bahasaTampil[0];
+const tanggalRekam = new Date(item.recordedAt).toLocaleDateString('id-ID', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const durasiJam = Math.floor(item.durationSeconds / 3600);
+const durasiMenit = Math.floor((item.durationSeconds % 3600) / 60);
+const durasiDetik = item.durationSeconds % 60;
+const durasiRegister = [durasiJam, durasiMenit, durasiDetik]
+  .map((bagian) => String(bagian).padStart(2, '0'))
+  .join(':');
+const durasiPanjang = [
+  durasiJam > 0 ? `${durasiJam} jam` : undefined,
+  durasiMenit > 0 ? `${durasiMenit} menit` : undefined,
+  durasiDetik > 0 ? `${durasiDetik} detik` : undefined,
+].filter(Boolean).join(' ');
+
 const durasiISO = `PT${Math.floor(item.durationSeconds / 60)}M${item.durationSeconds % 60}S`;
+const narasumberSchema = {
+  '@type': 'Person',
+  '@id': `${canonical}#narasumber`,
+  name: namaTampil,
+};
 
 const videoSchema = item.videoSource === 'none' ? [] : [{
   '@type': 'VideoObject',
   '@id': `${canonical}#video`,
-  name: item.title,
-  description: item.summary,
+  name: judulTampil,
+  description: ringkasanTampil,
   thumbnailUrl: [item.thumbnailUrl],
   uploadDate: item.publishedAt,
   duration: durasiISO,
@@ -38,8 +98,9 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
   ...(item.accessTier === 'public' && item.videoSource === 'youtube'
     ? { embedUrl: `https://www.youtube-nocookie.com/embed/${item.youtubeId}` }
     : {}),
-  transcript: item.transcript?.body ?? undefined,
+  transcript: transkripTampil ?? undefined,
   inLanguage: item.language,
+  creator: { '@id': `${canonical}#narasumber` },
   isPartOf: { '@id': `${site}/koleksi/${item.collection.slug}#collection` },
   publisher: { '@id': `${site}/#organization` },
   isAccessibleForFree: item.accessTier === 'public',
@@ -47,24 +108,25 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
     ? { conditionsOfAccess: 'Akses melalui permohonan riset. Lihat /terlibat/akses-arsip.' }
     : {}),
 }];
+const jsonLdSchema = [narasumberSchema, ...videoSchema];
 ---
 <BaseLayout
-  title={`${item.title} — Arsip Hidup Indonesia`}
-  description={item.summary}
+  title={`${judulTampil} — Arsip Hidup Indonesia`}
+  description={ringkasanTampil}
   canonical={canonical}
   ogImage={item.thumbnailUrl}
   type="article"
-  jsonLd={videoSchema}
+  jsonLd={jsonLdSchema}
 >
   <article>
-    <h1>{item.title}</h1>
+    <h1>{judulTampil}</h1>
 
     <KartuRegister
       nomorArsip={item.archiveNumber}
-      direkamTanggal={item.recordedAt}
+      direkamTanggal={tanggalRekam}
       direkamTempat={item.recordedPlace}
-      durasi={`${Math.floor(item.durationSeconds / 60)}:${String(item.durationSeconds % 60).padStart(2, '0')}`}
-      bahasa={item.language}
+      durasi={durasiRegister}
+      bahasa={bahasaTampil}
       narasumber={namaTampil}
       hak={item.license}
       akses={item.accessTier === 'public' ? 'Terbuka' : 'Melalui permohonan'}
@@ -74,7 +136,7 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
       videoSource={item.videoSource}
       youtubeId={item.youtubeId}
       thumbnailUrl={item.thumbnailUrl}
-      title={item.title}
+      title={judulTampil}
       durationSeconds={item.durationSeconds}
       itemId={item.id}
       accessTier={item.accessTier}
@@ -83,20 +145,22 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
       fallbackMp4={item.fallbackMp4}
     />
 
-    <section><h2>Tentang wawancara ini</h2><div set:html={item.description} /></section>
-
     {item.transcript && (
       <section id="transkrip">
         <h2>Transkrip lengkap wawancara</h2>
         <!-- GEO §2: paragraf ini berdiri sendiri dan dirancang untuk dikutip apa adanya. -->
         <p class="transkrip-meta">
-          Wawancara dengan {namaTampil} di {item.recordedPlace}. Direkam {item.recordedAt}.
-          Durasi {Math.floor(item.durationSeconds / 60)} menit. Bahasa {item.language.join(' dan ')}.
+          Wawancara dengan {namaTampil} di {item.recordedPlace}. Direkam {tanggalRekam}.
+          Durasi {durasiPanjang}. Bahasa {daftarBahasa}.
           Transkrip {item.transcript.isVerified ? 'sudah diverifikasi manusia' : 'hasil transkripsi otomatis dan BELUM diverifikasi'}.
         </p>
         <!-- Transkrip berada di HTML awal, tidak di-lazy-inject (GEO §1). -->
-        <div class="transkrip" set:html={item.transcript.body} />
+        <div class="transkrip" set:html={transkripTampil} />
       </section>
+    )}
+
+    {deskripsiTampil && (
+      <section><h2>Tentang wawancara ini</h2><div set:html={deskripsiTampil} /></section>
     )}
   </article>
 </BaseLayout>
