@@ -4,8 +4,13 @@ export type Role =
   "admin" | "editor" | "archivist" | "reviewer" | "researcher" | "member";
 
 /** Peran yang WAJIB MFA (SECURITY §4, RULES §1.4). */
+// KEPUTUSAN TERTULIS (22 Agustus 2026, Yusuf): "admin" dikecualikan
+// sementara dari gerbang MFA karena alur TOTP belum dibangun —
+// mfaSecret/mfaEnabled saat ini hanya field tanpa implementasi.
+// Ini pelonggaran RULES 1.4 yang disengaja dan tercatat.
+// SYARAT: VPS TIDAK BOLEH ONLINE sebelum T3.0 selesai.
+// TODO(T3.0): bangun alur TOTP penuh, lalu kembalikan "admin" ke daftar ini.
 export const MFA_REQUIRED_ROLES: Role[] = [
-  "admin",
   "editor",
   "archivist",
   "reviewer",

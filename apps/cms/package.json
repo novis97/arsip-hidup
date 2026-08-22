@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "migrate": "node ./scripts/with-root-env.mjs payload migrate",
     "migrate:create": "node ./scripts/with-root-env.mjs payload migrate:create",
-    "seed": "node ./scripts/with-root-env.mjs tsx src/seed/index.ts"
+    "seed": "node ./scripts/with-root-env.mjs tsx src/seed/index.ts",
+    "create-admin": "node ./scripts/with-root-env.mjs tsx scripts/create-admin.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1114.0",
