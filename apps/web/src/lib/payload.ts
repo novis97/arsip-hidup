@@ -6,11 +6,7 @@
 const API = process.env.PAYLOAD_PUBLIC_SERVER_URL ?? "http://localhost:3000";
 
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${API}/api${path}`, {
-    headers: {
-      Authorization: `users API-Key ${process.env.PAYLOAD_BUILD_KEY ?? ""}`,
-    },
-  });
+  const res = await fetch(`${API}/api${path}`);
   if (!res.ok) throw new Error(`Payload ${path} -> ${res.status}`);
   return res.json() as Promise<T>;
 }
