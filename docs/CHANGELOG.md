@@ -1,5 +1,15 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.3b — redaksi identitas di lapisan sumber — 24 Agustus 2026
+
+T1.3b memindahkan penegakan `displayConsent` dari lapisan render ke lapisan sumber melalui hook `afterRead` di `apps/cms/src/collections/Narasumber.ts`.
+
+Sebagai konsekuensinya, penyapu nama sisi render `polaNamaAsli` dan `hormatiDisplayConsent` DIHAPUS. Fungsi tersebut sebelumnya menyapu nama dari `title`, `summary`, `description`, dan `transcript`. Sampai T1.3c selesai, keempat field tersebut TIDAK memiliki perlindungan apa pun.
+
+Konsekuensi operasional: tidak boleh ada konten nyata masuk sebelum T1.3c selesai.
+
+Redaksi berbasis `!req.user` juga berlaku pada Local API yang dipanggil tanpa user. Ini disengaja, bukan bug.
+
 ## Keputusan dan temuan Fase 1 awal — 22 Agustus 2026
 
 ### Keputusan: pengecualian sementara peran `admin` dari kewajiban MFA

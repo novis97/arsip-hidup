@@ -21,7 +21,66 @@ export const Narasumber: CollectionConfig = {
     update: isStaff,
     delete: isStaff,
   },
+  hooks: {
+    afterRead: [
+      ({ doc, req }) => {
+        if (req.user) return doc;
+
+        const honorific =
+          typeof doc.honorific === "string" ? doc.honorific.trim() : "";
+        const birthDecade =
+          typeof doc.birthYear === "number" && Number.isFinite(doc.birthYear)
+            ? `${Math.floor(doc.birthYear / 10) * 10}-an`
+            : null;
+
+        if (doc.displayConsent === "full_name") {
+          const displayName =
+            typeof doc.displayName === "string" ? doc.displayName.trim() : "";
+          return {
+            ...doc,
+            publicLabel:
+              [honorific, displayName].filter(Boolean).join(" ") ||
+              "Narasumber (anonim)",
+            birthDecade,
+          };
+        }
+
+        if (doc.displayConsent === "initials") {
+          const initials =
+            typeof doc.initials === "string" ? doc.initials.trim() : "";
+          return {
+            ...doc,
+            publicLabel: initials
+              ? [honorific, initials].filter(Boolean).join(" ")
+              : "Narasumber (anonim)",
+            displayName: null,
+            slug: null,
+            birthYear: null,
+            birthDecade,
+            deceasedYear: null,
+          };
+        }
+
+        return {
+          ...doc,
+          publicLabel: "Narasumber (anonim)",
+          displayName: null,
+          slug: null,
+          initials: null,
+          honorific: null,
+          birthYear: null,
+          birthDecade,
+          deceasedYear: null,
+        };
+      },
+    ],
+  },
   fields: [
+    {
+      name: "publicLabel",
+      type: "text",
+      virtual: true,
+    },
     {
       name: "displayName",
       type: "text",
@@ -48,6 +107,11 @@ export const Narasumber: CollectionConfig = {
         description:
           "TAHUN saja. Tanggal lahir lengkap tidak dibutuhkan dan tidak disimpan.",
       },
+    },
+    {
+      name: "birthDecade",
+      type: "text",
+      virtual: true,
     },
     {
       name: "roleTags",

@@ -34,24 +34,12 @@ const canonical = `${site}/koleksi/${item.collection.slug}/${item.slug}`;
 // PRD C-6 / RULES C-6 — nama dihormati sesuai display_consent DI SETIAP TEMPAT,
 // termasuk title, meta description, dan schema. Kebocoran di satu titik = tidak ada anonimisasi.
 const nama = item.contributors?.[0]?.narasumber;
-const namaTampil =
-  !nama ? 'Narasumber' :
-  nama.displayConsent === 'full_name' ? nama.displayName :
-  nama.displayConsent === 'initials' ? nama.initials :
-  'Narasumber (anonim)';
+const namaTampil = nama?.publicLabel ?? 'Narasumber';
 
-const polaNamaAsli = nama?.displayName
-  ? new RegExp(nama.displayName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
-  : undefined;
-const hormatiDisplayConsent = (teks: string | null | undefined) => {
-  if (!teks || nama?.displayConsent === 'full_name' || !polaNamaAsli) return teks;
-  return teks.replace(polaNamaAsli, namaTampil);
-};
-
-const judulTampil = hormatiDisplayConsent(item.title) ?? 'Arsip sejarah lisan';
-const ringkasanTampil = hormatiDisplayConsent(item.summary);
-const deskripsiTampil = hormatiDisplayConsent(item.description ?? item.summary);
-const transkripTampil = hormatiDisplayConsent(item.transcript?.body);
+const judulTampil = item.title ?? 'Arsip sejarah lisan';
+const ringkasanTampil = item.summary;
+const deskripsiTampil = item.description ?? item.summary;
+const transkripTampil = item.transcript?.body;
 
 const bahasaNames: Record<string, string> = {
   id: 'Indonesia',
