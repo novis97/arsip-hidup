@@ -46,6 +46,19 @@ export const publishedNotWithdrawn: Access = ({ req }) => {
   return filter;
 };
 
+/** Transkrip publik hanya terbaca selama arsip induknya tetap diterbitkan. */
+export const transcriptPubliclyReadable: Access = ({ req }) => {
+  if (has(req, "admin", "editor", "archivist")) return true;
+  const filter: Where = {
+    and: [
+      { visibility: { equals: "public" } },
+      { "archiveItem._status": { equals: "published" } },
+      { "archiveItem.withdrawalRequested": { equals: false } },
+    ],
+  };
+  return filter;
+};
+
 /** Koleksi tanpa status draft memakai field visibilitasnya sendiri. */
 export const publicReadable: Access = ({ req }) => {
   if (has(req, "admin", "editor", "archivist")) return true;

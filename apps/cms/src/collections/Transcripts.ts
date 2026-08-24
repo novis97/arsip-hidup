@@ -1,12 +1,12 @@
 import type { CollectionConfig } from "payload";
-import { isStaff, publicReadable } from "../access/roles";
+import { isStaff, transcriptPubliclyReadable } from "../access/roles";
 
 /** SCHEMA §4. Aset SEO/GEO terbesar situs ini. */
 export const Transcripts: CollectionConfig = {
   slug: "transcripts",
   admin: { group: "Arsip", useAsTitle: "id" },
   access: {
-    read: publicReadable,
+    read: transcriptPubliclyReadable,
     create: isStaff,
     update: isStaff,
     delete: isStaff,
