@@ -1,8 +1,77 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, PayloadRequest } from "payload";
 import { isStaff, publishedNotWithdrawn } from "../access/roles";
 import { triggerDeploy } from "../lib/deploy";
+import {
+  redactNames,
+  redactNamesInValue,
+  type NameRedaction,
+} from "../lib/redactNames";
 
 const YT_ID = /^[A-Za-z0-9_-]{11}$/;
+const INTERNAL_REDACTION_USER: NonNullable<PayloadRequest["user"]> = {
+  id: -1,
+  name: "Proses redaksi internal",
+  role: "admin",
+  email: "redaksi-internal@localhost.invalid",
+  createdAt: "1970-01-01T00:00:00.000Z",
+  updatedAt: "1970-01-01T00:00:00.000Z",
+  collection: "users",
+};
+
+type NarasumberReference = {
+  id?: number | string;
+  publicLabel?: string | null;
+};
+
+type OriginalNarasumber = {
+  displayConsent?: string | null;
+  displayName?: string | null;
+};
+
+const originalNarasumberByRequest = new WeakMap<
+  object,
+  Map<number | string, Promise<OriginalNarasumber | null>>
+>();
+
+const getOriginalNarasumber = (
+  req: PayloadRequest,
+  id: number | string,
+): Promise<OriginalNarasumber | null> => {
+  let requestCache = originalNarasumberByRequest.get(req);
+  if (!requestCache) {
+    requestCache = new Map();
+    originalNarasumberByRequest.set(req, requestCache);
+  }
+
+  const cached = requestCache.get(id);
+  if (cached) return cached;
+
+  const lookup = req.payload
+    .findByID({
+      collection: "narasumber",
+      id,
+      depth: 0,
+      overrideAccess: true,
+      req: {
+        ...req,
+        query: { ...req.query },
+        user: INTERNAL_REDACTION_USER,
+      },
+    })
+    .then((narasumber) => narasumber as OriginalNarasumber);
+
+  requestCache.set(id, lookup);
+  return lookup;
+};
+
+const addRedactions = (
+  totals: Map<string, number>,
+  redactions: NameRedaction[],
+) => {
+  for (const { word, count } of redactions) {
+    totals.set(word, (totals.get(word) ?? 0) + count);
+  }
+};
 
 /**
  * Koleksi inti. SCHEMA.md §2.
@@ -211,6 +280,90 @@ export const ArchiveItems: CollectionConfig = {
   ],
 
   hooks: {
+    afterRead: [
+      async ({ doc, req }) => {
+        if (req.user) return doc;
+
+        const contributors = Array.isArray(doc.contributors)
+          ? doc.contributors
+          : [];
+        const references = new Map<
+          number | string,
+          NarasumberReference | undefined
+        >();
+
+        for (const contributor of contributors) {
+          const narasumber = contributor?.narasumber;
+          const reference =
+            narasumber && typeof narasumber === "object"
+              ? (narasumber as NarasumberReference)
+              : undefined;
+          const id = reference?.id ?? narasumber;
+          if (typeof id === "number" || typeof id === "string") {
+            if (!references.has(id) || reference?.publicLabel) {
+              references.set(id, reference);
+            }
+          }
+        }
+
+        for (const [id, reference] of references) {
+          const original = await getOriginalNarasumber(req, id);
+          if (
+            !original ||
+            original.displayConsent === "full_name" ||
+            typeof original.displayName !== "string" ||
+            typeof reference?.publicLabel !== "string"
+          ) {
+            continue;
+          }
+
+          const totals = new Map<string, number>();
+          const names = [original.displayName];
+          const title = redactNames(doc.title, names, reference.publicLabel);
+          doc.title = title.text;
+          addRedactions(totals, title.redactions);
+
+          const summary = redactNames(
+            doc.summary,
+            names,
+            reference.publicLabel,
+          );
+          doc.summary = summary.text;
+          addRedactions(totals, summary.redactions);
+
+          const description = redactNamesInValue(
+            doc.description,
+            names,
+            reference.publicLabel,
+          );
+          doc.description = description.value;
+          addRedactions(totals, description.redactions);
+
+          if (doc.transcript && typeof doc.transcript === "object") {
+            const transcript = doc.transcript as { body?: unknown };
+            const body = redactNames(
+              typeof transcript.body === "string" ? transcript.body : null,
+              names,
+              reference.publicLabel,
+            );
+            if (typeof transcript.body === "string") {
+              transcript.body = body.text;
+            }
+            addRedactions(totals, body.redactions);
+          }
+
+          for (const [word, count] of totals) {
+            console.info("AHI-REDACT", {
+              archiveItemId: doc.id,
+              word,
+              count,
+            });
+          }
+        }
+
+        return doc;
+      },
+    ],
     // Publish memicu build statis. Jeda 1–3 menit adalah konsekuensi sadar
     // dari memisahkan situs publik dari VPS (ARCHITECTURE §2.2).
     afterChange: [triggerDeploy],
