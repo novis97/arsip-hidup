@@ -54,6 +54,7 @@ export const transcriptPubliclyReadable: Access = ({ req }) => {
       { visibility: { equals: "public" } },
       { "archiveItem._status": { equals: "published" } },
       { "archiveItem.withdrawalRequested": { equals: false } },
+      { isVerified: { equals: true } },
     ],
   };
   return filter;

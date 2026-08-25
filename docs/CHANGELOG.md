@@ -1,5 +1,21 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.3h — gerbang verifikasi transkrip publik — 25 Agustus 2026
+
+`transcriptPubliclyReadable` sekarang menambahkan syarat `isVerified: { equals: true }` pada tiga syarat publik yang sudah ada. Bentuk `equals: true` membuat gerbang gagal-tertutup: transkrip dengan nilai `false`, `null`, atau `undefined` tidak dapat dibaca publik anonim. Akses staf tetap tidak berubah.
+
+Verifikasi runtime dijalankan Yusuf setelah CMS direstart. Saat `isVerified` transkrip id 3 diturunkan, `GET /api/transcripts?depth=0` berubah dari `totalDocs = 3` menjadi `totalDocs = 2`, dan `GET /api/transcripts/3?depth=0` mengembalikan 404. Transkrip id 1 dan 2 tetap dapat dibaca dengan body masing-masing 67 dan 99 karakter. Uji dua arah juga lolos: setelah id 3 dinaikkan kembali menjadi terverifikasi, `totalDocs` kembali menjadi 3.
+
+Redaksi T1.3g tetap bekerja: body seed id 2 berisi `[SEED] Sari Ningsih menjelaskan...`, sedangkan REST anonim mengembalikan `Ibu S.N. menjelaskan...`; nama asli hilang tanpa membuang `[SEED]` maupun sisa kalimat.
+
+RULES C-4 dan C-1 telah direvisi dalam commit `d33389d`. C-4 kini menetapkan bahwa transkrip belum terverifikasi tidak dibaca publik anonim dan gerbang berada pada access `read`; dengan T1.3h, kode dan dokumen kembali konsisten.
+
+**UTANG pengujian `full_name`.** Tidak ada body transkrip seed yang memuat nama narasumber ber-consent `full_name`. Karena itu klaim bahwa nama `full_name` tetap utuh belum teruji melalui REST.
+
+**UTANG pengujian `anonymous`.** Transkrip id 3 adalah satu-satunya transkrip seed milik narasumber `anonymous`. Setelah T1.3h, transkrip itu tidak terbaca anonim selama belum terverifikasi, sehingga data seed tidak lagi menyediakan kasus uji REST untuk jalur redaksi `anonymous`.
+
+Peringatan `BELUM diverifikasi` di `[slug].astro` kini tidak terjangkau pembaca anonim. Peringatan tersebut sengaja dipertahankan untuk pembaca terautentikasi dan pratinjau, sesuai C-4 yang direvisi.
+
 ## T1.3f, T1.3c, T1.3g — penutupan kebocoran identitas — 24 Agustus 2026
 
 **T1.3f** (`735b6f7`) menambah `transcriptPubliclyReadable`. Sebelumnya Transcripts memakai `publicReadable` yang hanya memfilter `visibility: public` tanpa pernah menanyakan keadaan arsip induknya. Akibatnya transkrip milik arsip yang sudah ditarik narasumber tetap terbaca anonim lewat `/api/transcripts`, meskipun arsipnya sendiri sudah hilang dari daftar publik. Penarikan diri tampak dihormati padahal isinya masih terambil. Fungsi baru memfilter tiga kondisi: `visibility`, `archiveItem._status`, dan `archiveItem.withdrawalRequested`.
