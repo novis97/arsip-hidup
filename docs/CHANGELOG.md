@@ -1,5 +1,22 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.3f, T1.3c, T1.3g — penutupan kebocoran identitas — 24 Agustus 2026
+
+**T1.3f** (`735b6f7`) menambah `transcriptPubliclyReadable`. Sebelumnya Transcripts memakai `publicReadable` yang hanya memfilter `visibility: public` tanpa pernah menanyakan keadaan arsip induknya. Akibatnya transkrip milik arsip yang sudah ditarik narasumber tetap terbaca anonim lewat `/api/transcripts`, meskipun arsipnya sendiri sudah hilang dari daftar publik. Penarikan diri tampak dihormati padahal isinya masih terambil. Fungsi baru memfilter tiga kondisi: `visibility`, `archiveItem._status`, dan `archiveItem.withdrawalRequested`.
+
+**T1.3c** (`4def258`) menambah `lib/redactNames.ts` dan hook `afterRead` di ArchiveItems yang menyapu nama narasumber non-`full_name` dari `title`, `summary`, dan `description`. Ini menggantikan penyapu sisi render yang dihapus di T1.3b. Penyapu lama hanya menangani `contributors[0]` dan hanya mencocokkan `displayName` persis — keduanya diperbaiki.
+
+**T1.3g** (`4d1362a`) menambah hook `afterRead` di Transcripts yang menyapu `body` dan mengosongkan `segments` untuk pembaca anonim. Diperlukan karena Astro mengambil transkrip dari endpoint terpisah dengan `depth=0`, sehingga hook ArchiveItems tidak pernah menerimanya.
+
+**Batasan yang diketahui.** Keamanan loop penyapuan di Transcripts.ts bergantung pada bentuk label pengganti. Loop memanggil `redactNames` sekali per narasumber, masing-masing di atas hasil putaran sebelumnya. Dengan label yang ada —  `Narasumber (anonim)` dan `Ibu <inisial>` — tabrakan tidak mungkin terjadi: 
+inisial berbentuk titik tidak cocok dengan nama orang, dan tidak ada narasumber bernama "Narasumber". **Kalau label diubah jadi sesuatu yang menyerupai nama, cacat ini hidup kembali** dan nama narasumber kedua bisa menyapu bagian label narasumber pertama tanpa error apa pun.
+
+**E-3 baru terpenuhi sebagian.** RULES §5 E-3 menuntut auto-unpublish maksimal 24 jam saat `withdrawalRequested = true`. Yang dibangun ketiga tiket ini hanya penutupan jalur BACA. Status di database tidak berubah, tidak ada penjadwal, tidak ada jaminan waktu. Mekanisme auto-unpublish butuh tiket tersendiri.
+
+**Larangan konten nyata dicabut.** Jendela tanpa perlindungan Kelas B yang dibuka T1.3b sudah ditutup. `dist/` terbukti bersih dari nama narasumber non-`full_name`, sementara narasumber `full_name` tetap utuh.
+
+**T1.3d dibatalkan.** Sempat diduga `publishedNotWithdrawn` tidak membaca `withdrawalRequested`. Setelah kodenya dibaca, ternyata membacanya dengan benar sejak awal. Dugaan itu lahir dari menyimpulkan berdasarkan nama fungsi lain (`publishedOnly`) yang dipakai sembilan koleksi berbeda.
+
 ## T1.3b — redaksi identitas di lapisan sumber — 24 Agustus 2026
 
 T1.3b memindahkan penegakan `displayConsent` dari lapisan render ke lapisan sumber melalui hook `afterRead` di `apps/cms/src/collections/Narasumber.ts`.

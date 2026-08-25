@@ -1,5 +1,5 @@
 # RULES — Aturan Kerja Arsip Hidup Indonesia
-**Versi:** 0.3 · 20 Agustus 2026
+**Versi:** 0.4 · 25 Agustus 2026
 Aturan di sini bersifat mengikat. Bila sebuah aturan menghalangi pekerjaan, ubah aturannya lewat keputusan tertulis — jangan dilewati diam-diam.
 
 ---
@@ -47,10 +47,24 @@ Aturan di sini bersifat mengikat. Bila sebuah aturan menghalangi pekerjaan, ubah
 
 ## 3. Aturan konten & editorial
 
-**C-1.** Setiap `archive_item` publik wajib punya: `summary` (2–4 kalimat), transkrip atau ringkasan, minimal satu tema, `rights_statement`, dan atribusi narasumber sesuai `display_consent`.
+**C-1.** (direvisi T1.3h, 25 Agustus 2026) Setiap `archive_item` publik wajib punya: `summary` (2–4 kalimat), transkrip atau ringkasan isi, minimal satu tema, `rights_statement`, dan atribusi narasumber sesuai `display_consent`.
+
+Sejak C-4 direvisi, transkrip yang belum terverifikasi tidak terbaca publik. Arsip publik yang transkripnya belum lolos gerbang WAJIB mengisi `description` dengan uraian isi wawancara — apa yang diceritakan narasumber, bukan deskripsi katalog. `summary` tidak memenuhi syarat ini; ia sudah wajib untuk semua arsip dan berfungsi sebagai keterangan singkat, bukan pengganti isi.
+
+Aturan ini TIDAK ditegakkan kode. Ia disiplin editorial, dan disiplin editorial di proyek ini sudah terbukti berubah jadi kelonggaran diam-diam. Penegakannya adalah utang tercatat.
+
 **C-2.** Timeline dan Peta Warna wajib punya `source_citation`. Klaim tanpa sumber tidak masuk ke arsip.
 **C-3.** Menu Berita hanya memuat **kutipan pendek + tautan** ke sumber aslinya. Menyalin artikel media secara utuh adalah pelanggaran hak cipta, dan konten duplikat merusak SEO.
-**C-4.** Transkrip hasil ASR ditandai `is_verified = false` sampai dikoreksi manusia, dan status itu terlihat oleh pembaca. Transkrip mesin atas bahasa campuran Indonesia–Jawa akan salah, dan kesalahan yang tampak otoritatif lebih berbahaya daripada tidak ada transkrip.
+**C-4.** (direvisi T1.3h, 25 Agustus 2026) Transkrip ASR berstatus is_verified = false sampai dikoreksi manusia. Transkrip yang belum terverifikasi TIDAK dibaca oleh publik anonim — gerbangnya ada di access read (transcriptPubliclyReadable), bukan di lapisan render.
+
+Perubahan dari rumusan sebelumnya: C-4 semula mewajibkan status is_verified terlihat oleh pembaca, yang mengandaikan transkrip belum terverifikasi memang tampil di situs publik dengan peringatan. Rumusan itu dicabut.
+
+Alasan: peringatan melindungi pembaca dari salah menganggap transkrip otoritatif. Ia tidak melindungi orang yang namanya salah didengar ASR. ASR pada campuran Indonesia-Jawa salah dengar nama orang dan nama tempat,dan orang yang disebut DI DALAM rekaman tidak menandatangani consent apa pun. lib/redactNames.ts tidak menjangkau mereka karena ia hanya menyapu nama dari record Narasumber. Selain itu, transkrip mesin atas bahasa campuran Indonesia–Jawa akan salah, dan kesalahan yang tampak otoritatif lebih berbahaya daripada tidak ada transkrip sama sekali.
+
+Kewajiban menampilkan status tetap berlaku untuk pembaca terautentikasi dan pratinjau. Peringatan "BELUM diverifikasi" di [slug].astro DIPERTAHANKAN meski tak terjangkau anonim.
+
+Konsekuensi operasional: tidak ada transkrip publik tanpa koreksi manusia lebih dulu. Peran korektor: editor. Beban kerja ~3-5x durasi rekaman untuk campuran Indonesia-Jawa (G-6, belum berbiaya).
+
 **C-5.** Foto tidak diberi filter. Warna dikoreksi seperlunya, tidak digayakan.
 **C-6.** Nama narasumber ditulis sesuai `display_consent` **di setiap tempat** — termasuk `alt`, judul halaman, schema, dan meta OG. Anonimisasi yang bocor di satu tempat sama dengan tidak ada anonimisasi.
 **C-7.** Kutipan panjang dari narasumber selalu diberi konteks: kapan direkam, dalam percakapan tentang apa. Kutipan tanpa konteks adalah cara paling halus mendistorsi sumber.
