@@ -1,12 +1,24 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.3j — perkaya data seed transkrip — 25 Agustus 2026
+
+Ketiga body transkrip seed diperpanjang menjadi lima paragraf agar halaman arsip memiliki bahan yang cukup untuk penilaian visual. Setiap body dibuka dengan penanda `[SEED]` yang berdiri sendiri. Body id 1 menyebut `[SEED] Ratmi` sebagai kasus positif `full_name`; body id 2 dan 3 selalu menyebut narasumber memakai `displayName` lengkap, termasuk prefiks `[SEED] `. Transkrip id 3 kini berstatus `isVerified: true`, dan arsip `seed-musim-rob-01` mendapat `description` dua paragraf.
+
+Verifikasi runtime dijalankan Yusuf setelah database dibangun ulang. Tiga belas assertion lolos: `GET /api/transcripts?depth=0` mengembalikan `totalDocs = 3`; ketiga transkrip terbaca anonim; `[SEED] Ratmi` tetap utuh pada body id 1; body id 2 tidak memuat `Sari Ningsih` dan memakai label inisial; body id 3 tidak memuat `Laras Wening`, `Laras`, maupun `Wening` dan memakai label `Narasumber (anonim)`; serta setiap body masih memuat sedikitnya satu penanda `[SEED]`.
+
+`description` arsip `seed-musim-rob-01` terisi sebagai rich text JSON berukuran 3099 byte dan bersih dari nama narasumber. Build menghasilkan 4 halaman, sementara indeks Pagefind bertambah dari 174 menjadi 441 kata. Kalimat penutup body transkrip id 1 dan id 3 ditemukan utuh di HTML hasil build, membuktikan isi panjang sampai ke `dist`.
+
+**UTANG penyapuan stopword.** Daftar stopword di `lib/redactNames.ts` dapat membiarkan nama utuh lolos. Nama yang seluruh komponennya merupakan stopword, misalnya "laras wening", hanya tersapu melalui pencocokan nama lengkap. Jika teks menyebut nama itu tanpa prefiks `[SEED]`, pencocokan nama lengkap terhadap `displayName` tidak kena, sedangkan penyapuan per-kata menolak seluruh komponennya. Seed T1.3j menghindari keadaan tersebut dengan selalu memakai `displayName` lengkap. Ini mitigasi berbasis konvensi data, bukan perbaikan kode.
+
+**TEMUAN jalur render `description`.** Field `description` tidak dirender di `[slug].astro`. API mengembalikan `description` arsip `seed-musim-rob-01`, tetapi frasa pembukanya tidak ditemukan di HTML hasil build. Dengan demikian RULES C-1, khususnya kewajiban mengisi `description` dengan uraian isi wawancara, belum mempunyai jalur render menuju pembaca. Temuan ini bukan cacat T1.3j; data baru T1.3j membuatnya dapat diuji. Perbaikannya dijadwalkan pada T1.6.
+
 ## T1.3h — gerbang verifikasi transkrip publik — 25 Agustus 2026
 
 `transcriptPubliclyReadable` sekarang menambahkan syarat `isVerified: { equals: true }` pada tiga syarat publik yang sudah ada. Bentuk `equals: true` membuat gerbang gagal-tertutup: transkrip dengan nilai `false`, `null`, atau `undefined` tidak dapat dibaca publik anonim. Akses staf tetap tidak berubah.
 
-Verifikasi runtime dijalankan Yusuf setelah CMS direstart. Saat `isVerified` transkrip id 3 diturunkan, `GET /api/transcripts?depth=0` berubah dari `totalDocs = 3` menjadi `totalDocs = 2`, dan `GET /api/transcripts/3?depth=0` mengembalikan 404. Transkrip id 1 dan 2 tetap dapat dibaca dengan body masing-masing 67 dan 99 karakter. Uji dua arah juga lolos: setelah id 3 dinaikkan kembali menjadi terverifikasi, `totalDocs` kembali menjadi 3.
+Verifikasi runtime dijalankan Yusuf setelah CMS direstart. Saat `isVerified` transkrip id 3 diturunkan, `GET /api/transcripts?depth=0` berubah dari `totalDocs = 3` menjadi `totalDocs = 2`, dan `GET /api/transcripts/3?depth=0` mengembalikan 404. Transkrip id 1 dan 2 tetap dapat dibaca dengan body masing-masing 67 dan 99 karakter. Uji dua arah juga lolos: setelah id 3 dinaikkan kembali menjadi terverifikasi, `totalDocs` kembali menjadi 3. Angka 67 dan 99 merekam respons runtime pada saat verifikasi T1.3h; literal body seed sebelum T1.3j berukuran 67, 110, dan 99 karakter untuk id 1, 2, dan 3. Seluruh angka tersebut adalah keadaan sebelum T1.3j memperpanjang ketiga body.
 
-Redaksi T1.3g tetap bekerja: body seed id 2 berisi `[SEED] Sari Ningsih menjelaskan...`, sedangkan REST anonim mengembalikan `Ibu S.N. menjelaskan...`; nama asli hilang tanpa membuang `[SEED]` maupun sisa kalimat.
+Redaksi T1.3g tetap bekerja: body seed id 2 berisi `[SEED] Sari Ningsih menjelaskan...`, sedangkan REST anonim mengembalikan `Ibu S.N. menjelaskan...`. Klaim lama bahwa nama asli hilang tanpa membuang `[SEED]` tidak akurat: karena `displayName` narasumber non-`full_name` mencakup prefiks `[SEED] `, pencocokan nama lengkap ikut menelan prefiks yang menempel pada nama. Sisa kalimat tetap utuh. Setelah T1.3j, prefiks yang menempel pada `[SEED] Ratmi` tetap utuh karena Ratmi ber-consent `full_name` dan hook melewati penyapuan; penanda `[SEED]` pembuka yang berdiri sendiri pada setiap body juga tidak ikut tersapu.
 
 RULES C-4 dan C-1 telah direvisi dalam commit `d33389d`. C-4 kini menetapkan bahwa transkrip belum terverifikasi tidak dibaca publik anonim dan gerbang berada pada access `read`; dengan T1.3h, kode dan dokumen kembali konsisten.
 
