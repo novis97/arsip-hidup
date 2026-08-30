@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.6b — perbaiki jalur render description Lexical — 31 Agustus 2026
+
+Halaman arsip kini mengonversi rich text Lexical pada `description` menjadi HTML di sisi Astro memakai konverter resmi `@payloadcms/richtext-lexical`. Fallback ke `summary` dicabut agar seksi "Tentang wawancara ini" tidak tampil ketika `description` memang kosong.
+
+**UTANG BARU sinkronisasi versi.** Versi `@payloadcms/richtext-lexical` di `apps/web` wajib bergerak bersama versi yang dipakai `apps/cms`. Belum ada penegak otomatis untuk menjaga keduanya tetap sama.
+
 ## T1.3j — perkaya data seed transkrip — 25 Agustus 2026
 
 Ketiga body transkrip seed diperpanjang menjadi lima paragraf agar halaman arsip memiliki bahan yang cukup untuk penilaian visual. Setiap body dibuka dengan penanda `[SEED]` yang berdiri sendiri. Body id 1 menyebut `[SEED] Ratmi` sebagai kasus positif `full_name`; body id 2 dan 3 selalu menyebut narasumber memakai `displayName` lengkap, termasuk prefiks `[SEED] `. Transkrip id 3 kini berstatus `isVerified: true`, dan arsip `seed-musim-rob-01` mendapat `description` dua paragraf.

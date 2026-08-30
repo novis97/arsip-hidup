@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArsipPlayer from '../../../components/player/ArsipPlayer.astro';
 import KartuRegister from '../../../components/KartuRegister.astro';
 import { getPublishedItems } from '../../../lib/payload';
+import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html';
 
 export async function getStaticPaths() {
   const items = await getPublishedItems();
@@ -38,7 +39,24 @@ const namaTampil = nama?.publicLabel ?? 'Narasumber';
 
 const judulTampil = item.title ?? 'Arsip sejarah lisan';
 const ringkasanTampil = item.summary;
-const deskripsiTampil = item.description ?? item.summary;
+let deskripsiTampil = item.description;
+if (
+  deskripsiTampil !== null &&
+  typeof deskripsiTampil === 'object' &&
+  'root' in deskripsiTampil
+) {
+  try {
+    deskripsiTampil = convertLexicalToHTML({
+      data: deskripsiTampil as Parameters<typeof convertLexicalToHTML>[0]['data'],
+    });
+  } catch (error) {
+    throw new Error(`Gagal mengonversi description arsip ${item.slug}.`, { cause: error });
+  }
+
+  if (deskripsiTampil.trim().length === 0) {
+    throw new Error(`Hasil konversi description arsip ${item.slug} kosong.`);
+  }
+}
 const transkripTampil = item.transcript?.body;
 
 const bahasaNames: Record<string, string> = {
@@ -147,6 +165,12 @@ const jsonLdSchema = [narasumberSchema, ...videoSchema];
       </section>
     )}
 
+    <!--
+    RULES C-1: summary TIDAK memenuhi syarat sebagai pengganti transkrip.
+    Fallback ke summary dicabut di T1.6b karena membuat arsip yang lupa
+    diisi description terlihat identik dengan yang sudah diisi.
+    Seksi ini kosong = description memang kosong. Itu disengaja.
+    -->
     {deskripsiTampil && (
       <section><h2>Tentang wawancara ini</h2><div set:html={deskripsiTampil} /></section>
     )}
