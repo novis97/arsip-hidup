@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.7c — content collections dan rute editorial statis — 31 Agustus 2026
+
+Astro content collections kini memvalidasi dan merender 33 halaman editorial dari folder `tentang/`, `berpartisipasi/`, `berita/`, `cerita/`, `koleksi/`, `kontak/`, `belajar/`, dan `rekomendasi-karya/`. Resolusi URL mempertahankan slug yang sudah memuat garis miring atau sama dengan nama folder; slug lain mendapat awalan nama folder. Build gagal jika dua berkas menghasilkan URL yang sama dan menyebut kedua path sumbernya.
+
+Folder `jelajah/` sengaja tidak dimasukkan karena bergantung pada koleksi Payload `themes` yang masih kosong dan implementasinya masih berupa stub, sehingga 11 halamannya akan kosong. Folder `beranda/` juga sengaja tidak dimasukkan karena beranda sudah dilayani `pages/index.astro` dan akan bertabrakan bila dirender melalui rute editorial.
+
 ## T2.0b — pengaman staging publik — 31 Agustus 2026
 
 Staging publik kini memiliki empat pengaman yang bergantung pada `PUBLIC_STAGING=1`: setiap halaman memuat `noindex, nofollow`, endpoint `robots.txt` menolak seluruh crawler, pita permanen DATA UJI tampil pada bagian teratas setiap halaman, serta canonical dan `og:url` mengikuti `PUBLIC_SITE_URL` sementara integrasi sitemap dimatikan. Tanpa flag staging, endpoint `robots.txt` tetap menyajikan kebijakan produksi yang mengizinkan crawler mesin jawaban, memblokir crawler pelatihan sesuai RULES E-8, dan mencantumkan Sitemap. Build staging gagal dengan pesan yang jelas jika `PUBLIC_SITE_URL` tidak disetel.

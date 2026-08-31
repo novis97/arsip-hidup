@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+type Props = {
+  entry: CollectionEntry<'editorial'>;
+  resolvedSlug: string;
+};
+
+export async function getStaticPaths() {
+  const resolveEditorialSlug = (filePath: string, slug: string): string => {
+    const folder = filePath.split('/')[0];
+
+    if (slug.includes('/') || slug === folder) {
+      return slug;
+    }
+
+    return `${folder}/${slug}`;
+  };
+
+  const entries = await getCollection('editorial');
+  const pathsBySlug = new Map<string, string>();
+
+  return entries.map((entry: CollectionEntry<'editorial'>) => {
+    const resolvedSlug = resolveEditorialSlug(entry.id, entry.data.slug);
+    const filePath = `apps/web/src/content/${entry.id}`;
+    const existingPath = pathsBySlug.get(resolvedSlug);
+
+    if (existingPath) {
+      throw new Error(
+        `URL editorial duplikat "/${resolvedSlug}" dihasilkan oleh "${existingPath}" dan "${filePath}".`,
+      );
+    }
+
+    pathsBySlug.set(resolvedSlug, filePath);
+
+    return {
+      params: { slug: resolvedSlug },
+      props: { entry, resolvedSlug },
+    };
+  });
+}
+
+const { entry, resolvedSlug } = Astro.props;
+const { Content } = await render(entry);
+const canonical = new URL(`/${resolvedSlug}`, 'https://arsiphidup.id').toString();
+---
+
+<BaseLayout
+  title={entry.data.meta_title}
+  description={entry.data.meta_description}
+  canonical={canonical}
+>
+  <article>
+    <h1>{entry.data.judul}</h1>
+    <Content />
+  </article>
+</BaseLayout>
