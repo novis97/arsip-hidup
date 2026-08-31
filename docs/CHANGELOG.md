@@ -1,5 +1,9 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.6c — format tanggal figcaption dan Kartu Register responsif — 31 Agustus 2026
+
+Figcaption pemutar kini memakai tanggal rekam yang sudah diformat dalam bahasa Indonesia, bukan timestamp ISO mentah. Kartu Register tetap memakai struktur semantik `<dl>`/`<dt>`/`<dd>`, tetapi tata letaknya kini membungkus isi panjang dan menumpuk label serta nilai pada layar sempit. Ekstraksi CSS sengaja tidak dilakukan karena dijadwalkan untuk T1.6d; jangkar `#transkrip` juga sengaja tidak disentuh karena memiliki tiket tersendiri.
+
 ## T1.6e — pindahkan awalan rute arsip ke `/arsip/` — 31 Agustus 2026
 
 Awalan rute arsip Payload dipindahkan dari `/koleksi/` ke `/arsip/`, dan nama segmen dinamis `[collection]` diganti menjadi `[proyek]`. Perubahan ini mencerminkan bahwa segmen tersebut berisi slug proyek dokumentasi, sedangkan `/koleksi/` dicadangkan untuk konsep editorial yang berbeda. Konten editorial di `apps/web/src/content/` sengaja tidak diubah.
