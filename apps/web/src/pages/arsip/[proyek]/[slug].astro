@@ -23,14 +23,14 @@ export async function getStaticPaths() {
     const result = await response.json();
 
     return {
-      params: { collection: item.collection.slug, slug: item.slug },
+      params: { proyek: item.collection.slug, slug: item.slug },
       props: { item: { ...item, transcript: result.docs[0] } },
     };
   }));
 }
 const { item } = Astro.props;
 const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id';
-const canonical = `${site}/koleksi/${item.collection.slug}/${item.slug}`;
+const canonical = `${site}/arsip/${item.collection.slug}/${item.slug}`;
 
 // PRD C-6 / RULES C-6 — nama dihormati sesuai display_consent DI SETIAP TEMPAT,
 // termasuk title, meta description, dan schema. Kebocoran di satu titik = tidak ada anonimisasi.
@@ -107,7 +107,7 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
   transcript: transkripTampil ?? undefined,
   inLanguage: item.language,
   creator: { '@id': `${canonical}#narasumber` },
-  isPartOf: { '@id': `${site}/koleksi/${item.collection.slug}#collection` },
+  isPartOf: { '@id': `${site}/arsip/${item.collection.slug}#collection` },
   publisher: { '@id': `${site}/#organization` },
   isAccessibleForFree: item.accessTier === 'public',
   ...(item.accessTier === 'restricted'

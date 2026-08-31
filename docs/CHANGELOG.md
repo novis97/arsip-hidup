@@ -1,5 +1,9 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.6e — pindahkan awalan rute arsip ke `/arsip/` — 31 Agustus 2026
+
+Awalan rute arsip Payload dipindahkan dari `/koleksi/` ke `/arsip/`, dan nama segmen dinamis `[collection]` diganti menjadi `[proyek]`. Perubahan ini mencerminkan bahwa segmen tersebut berisi slug proyek dokumentasi, sedangkan `/koleksi/` dicadangkan untuk konsep editorial yang berbeda. Konten editorial di `apps/web/src/content/` sengaja tidak diubah.
+
 ## T1.6b — perbaiki jalur render description Lexical — 31 Agustus 2026
 
 Halaman arsip kini mengonversi rich text Lexical pada `description` menjadi HTML di sisi Astro memakai konverter resmi `@payloadcms/richtext-lexical`. Fallback ke `summary` dicabut agar seksi "Tentang wawancara ini" tidak tampil ketika `description` memang kosong.
