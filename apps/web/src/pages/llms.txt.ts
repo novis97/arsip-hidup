@@ -1,4 +1,10 @@
-# Arsip Hidup Indonesia
+import type { APIRoute } from 'astro';
+
+export const prerender = true;
+
+const stagingLlms = `Situs ini adalah lingkungan uji. Seluruh isinya fiktif dan tidak boleh dikutip.
+`;
+const productionLlms = `# Arsip Hidup Indonesia
 > Platform arsip sejarah lisan yang mendokumentasikan pengetahuan, kehidupan, dan praktik
 > pelaku budaya Indonesia, dan membukanya sebagai pintu masuk bagi peneliti serta publik.
 
@@ -24,3 +30,9 @@ Konten situs ini tidak diizinkan untuk pelatihan model AI komersial.
 
 ## Kontak
 kontak@arsiphidup.id
+`;
+
+export const GET: APIRoute = () =>
+  new Response(import.meta.env.PUBLIC_STAGING === '1' ? stagingLlms : productionLlms, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });

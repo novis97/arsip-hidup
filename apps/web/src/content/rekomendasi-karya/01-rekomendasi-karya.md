@@ -47,8 +47,5 @@ Tidak. Kamu boleh mengusulkan karya siapa saja, asal pemiliknya sudah diberi tah
 Belum tentu. Usulan ditinjau dulu sesuai proyek yang sedang berjalan dan kesediaan pemilik karya untuk membagikannya.
 
 <!--
-CATATAN DEV (internal, jangan tampilkan ke publik):
-- Struktur menu resmi menandai menu 09 "Rekomendasi Karya" sebagai "masih dipertimbangkan tim untuk digabung ke Berpartisipasi (06)". Draft ini dibuat berdiri sendiri (top-level, slug /rekomendasi-karya) karena user secara eksplisit meminta "halaman Rekomendasi Karya" tersendiri — tapi perlu dikonfirmasi ke tim dev apakah tetap top-level atau dilebur jadi submenu ke-7 Berpartisipasi. Kalau dilebur, slug kemungkinan berubah ke /berpartisipasi/rekomendasi-karya dan tautan ke "Usulkan Narasumber" di atas perlu disesuaikan path-nya.
-- Email karya@arsiphidup.id adalah contoh placeholder, mengikuti pola alamat contoh lain di berpartisipasi/01-berpartisipasi-hub.md (volunteer@, partnership@, donasi@, cerita@, narasumber@, partisipasi@) — ganti dengan alamat resmi sebelum go-live.
-- Konten ini murni microcopy fungsional (form/ajakan), tidak melibatkan narasumber fiktif — tidak ada klaim wawancara/cerita yang perlu ditandai FIKTIF di sini.
+
 -->

@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T2.0c — `llms.txt` kondisional untuk staging — 31 Agustus 2026
+
+`llms.txt` dipindahkan dari berkas publik statis ke endpoint prerender kondisional agar staging tidak mengundang model bahasa dan mesin jawaban mengutip konten uji yang seluruhnya fiktif. Dengan `PUBLIC_STAGING=1`, endpoint hanya menyatakan bahwa situs merupakan lingkungan uji dan isinya tidak boleh dikutip; tanpa flag tersebut, isi produksi dipertahankan tanpa perubahan.
+
+**CATATAN:** Isi versi produksi masih memuat URL usang yang belum diperbaiki. Perbaikannya merupakan tiket tersendiri setelah struktur URL final.
+
 ## T1.7c — content collections dan rute editorial statis — 31 Agustus 2026
 
 Astro content collections kini memvalidasi dan merender 33 halaman editorial dari folder `tentang/`, `berpartisipasi/`, `berita/`, `cerita/`, `koleksi/`, `kontak/`, `belajar/`, dan `rekomendasi-karya/`. Resolusi URL mempertahankan slug yang sudah memuat garis miring atau sama dengan nama folder; slug lain mendapat awalan nama folder. Build gagal jika dua berkas menghasilkan URL yang sama dan menyebut kedua path sumbernya.
