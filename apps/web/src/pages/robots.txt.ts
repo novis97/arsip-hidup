@@ -1,4 +1,11 @@
-# ── Mesin pencari ─────────────────────────────
+import type { APIRoute } from 'astro';
+
+export const prerender = true;
+
+const stagingRobots = `User-agent: *
+Disallow: /
+`;
+const productionRobots = `# ── Mesin pencari ─────────────────────────────
 User-agent: *
 Allow: /
 Disallow: /admin
@@ -38,3 +45,9 @@ User-agent: Bytespider
 Disallow: /
 
 Sitemap: https://arsiphidup.id/sitemap-index.xml
+`;
+
+export const GET: APIRoute = () =>
+  new Response(import.meta.env.PUBLIC_STAGING === '1' ? stagingRobots : productionRobots, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });

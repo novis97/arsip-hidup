@@ -5,7 +5,15 @@ export interface Props {
   ogImage?: string; type?: 'website' | 'article'; jsonLd?: object[];
 }
 const { title, description, canonical, ogImage, type = 'website', jsonLd = [] } = Astro.props;
-const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id';
+const isStaging = import.meta.env.PUBLIC_STAGING === '1';
+const configuredSite = import.meta.env.PUBLIC_SITE_URL;
+
+if (isStaging && !configuredSite) {
+  throw new Error('PUBLIC_SITE_URL wajib disetel ketika PUBLIC_STAGING=1.');
+}
+
+const site = configuredSite ?? 'https://arsiphidup.id';
+const pageCanonical = isStaging ? new URL(Astro.url.pathname, site).toString() : canonical;
 ---
 <!doctype html>
 <html lang="id">
@@ -14,13 +22,14 @@ const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id';
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <link rel="canonical" href={canonical} />
-  <link rel="alternate" hreflang="id" href={canonical} />
-  <link rel="alternate" hreflang="x-default" href={canonical} />
+  {isStaging && <meta name="robots" content="noindex, nofollow" />}
+  <link rel="canonical" href={pageCanonical} />
+  <link rel="alternate" hreflang="id" href={pageCanonical} />
+  <link rel="alternate" hreflang="x-default" href={pageCanonical} />
   <meta property="og:type" content={type} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:url" content={canonical} />
+  <meta property="og:url" content={pageCanonical} />
   <meta property="og:locale" content="id_ID" />
   {ogImage && <meta property="og:image" content={ogImage} />}
   <meta name="twitter:card" content="summary_large_image" />
@@ -45,9 +54,26 @@ const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id';
   <slot name="head" />
 </head>
 <body>
+  {isStaging && (
+    <div class="staging-banner" role="status">
+      DATA UJI — Seluruh isi situs ini fiktif, termasuk nama narasumber, kutipan, liputan media, dan riwayat organisasi. Tidak ada wawancara nyata yang telah dilakukan. Halaman ini dipakai untuk menguji tampilan, bukan untuk dibaca sebagai informasi.
+    </div>
+  )}
   <a href="#konten" class="skip">Lewati ke konten</a>
   <header><nav aria-label="Utama"><!-- TODO: nav --></nav></header>
   <main id="konten"><slot /></main>
   <footer><p class="mono">© {new Date().getFullYear()} Arsip Hidup Indonesia</p></footer>
 </body>
 </html>
+
+<style>
+  .staging-banner {
+    padding: var(--s3) var(--s4);
+    background: var(--wedelan);
+    color: var(--mori);
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: center;
+  }
+</style>

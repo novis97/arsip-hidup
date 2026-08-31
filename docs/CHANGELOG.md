@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T2.0b — pengaman staging publik — 31 Agustus 2026
+
+Staging publik kini memiliki empat pengaman yang bergantung pada `PUBLIC_STAGING=1`: setiap halaman memuat `noindex, nofollow`, endpoint `robots.txt` menolak seluruh crawler, pita permanen DATA UJI tampil pada bagian teratas setiap halaman, serta canonical dan `og:url` mengikuti `PUBLIC_SITE_URL` sementara integrasi sitemap dimatikan. Tanpa flag staging, endpoint `robots.txt` tetap menyajikan kebijakan produksi yang mengizinkan crawler mesin jawaban, memblokir crawler pelatihan sesuai RULES E-8, dan mencantumkan Sitemap. Build staging gagal dengan pesan yang jelas jika `PUBLIC_SITE_URL` tidak disetel.
+
+`robots.txt` ini berlaku di `arsiphidup-staging.pages.dev`, tetapi kemungkinan tidak dilayani di `staging.arsiphidup.id` karena zona `arsiphidup.id` menyajikan Managed Content bawaan Cloudflare. Keterbatasan tersebut diketahui dan tidak disiasati. Seluruh pengaman staging ini **WAJIB dicabut sebelum produksi** dengan membangun tanpa `PUBLIC_STAGING=1`.
+
 ## T1.6c — format tanggal figcaption dan Kartu Register responsif — 31 Agustus 2026
 
 Figcaption pemutar kini memakai tanggal rekam yang sudah diformat dalam bahasa Indonesia, bukan timestamp ISO mentah. Kartu Register tetap memakai struktur semantik `<dl>`/`<dt>`/`<dd>`, tetapi tata letaknya kini membungkus isi panjang dan menumpuk label serta nilai pada layar sempit. Ekstraksi CSS sengaja tidak dilakukan karena dijadwalkan untuk T1.6d; jangkar `#transkrip` juga sengaja tidak disentuh karena memiliki tiket tersendiri.
