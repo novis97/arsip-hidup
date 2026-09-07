@@ -14,6 +14,18 @@ if (isStaging && !configuredSite) {
 
 const site = configuredSite ?? 'https://arsiphidup.id';
 const pageCanonical = isStaging ? new URL(Astro.url.pathname, site).toString() : canonical;
+const currentPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, '');
+const navigationItems = [
+  { label: 'Beranda', href: '/' },
+  { label: 'Tentang', href: '/tentang' },
+  { label: 'Koleksi', href: '/koleksi' },
+  { label: 'Cerita', href: '/cerita' },
+  { label: 'Belajar', href: '/belajar' },
+  { label: 'Berpartisipasi', href: '/berpartisipasi' },
+  { label: 'Berita', href: '/berita' },
+  { label: 'Kontak', href: '/kontak' },
+  { label: 'Rekomendasi Karya', href: '/rekomendasi-karya' },
+];
 ---
 <!doctype html>
 <html lang="id">
@@ -60,7 +72,22 @@ const pageCanonical = isStaging ? new URL(Astro.url.pathname, site).toString() :
     </div>
   )}
   <a href="#konten" class="skip">Lewati ke konten</a>
-  <header><nav aria-label="Utama"><!-- TODO: nav --></nav></header>
+  <header class="site-header">
+    <nav aria-label="Utama">
+      <details class="primary-navigation">
+        <summary>Menu utama</summary>
+        <ul>
+          {navigationItems.map((item) => (
+            <li>
+              <a href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </nav>
+  </header>
   <main id="konten"><slot /></main>
   <footer><p class="mono">© {new Date().getFullYear()} Arsip Hidup Indonesia</p></footer>
 </body>
@@ -75,5 +102,44 @@ const pageCanonical = isStaging ? new URL(Astro.url.pathname, site).toString() :
     font-weight: 700;
     line-height: 1.5;
     text-align: center;
+  }
+
+  .site-header {
+    border-bottom: 1px solid currentColor;
+    padding: var(--s3) var(--s4);
+  }
+
+  .primary-navigation summary {
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .primary-navigation ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s3);
+    list-style: none;
+    margin: var(--s3) 0 0;
+    padding: 0;
+  }
+
+  .primary-navigation a[aria-current='page'] {
+    font-weight: 700;
+    text-decoration-thickness: 0.15em;
+  }
+
+  @media (min-width: 768px) {
+    .primary-navigation summary {
+      display: none;
+    }
+
+    .primary-navigation > ul,
+    .primary-navigation:not([open]) > ul {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-top: 0;
+    }
   }
 </style>

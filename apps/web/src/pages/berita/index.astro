@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const resolveEditorialSlug = (filePath: string, slug: string): string => {
+  const folder = filePath.split('/')[0];
+
+  if (slug.includes('/') || slug === folder) {
+    return slug;
+  }
+
+  return `${folder}/${slug}`;
+};
+
+const entries = (await getCollection('editorial'))
+  .filter((entry) => entry.data.tipe_konten === 'berita')
+  .sort((a, b) => a.id.localeCompare(b.id));
+---
+
+<BaseLayout
+  title="Berita — Arsip Hidup Indonesia"
+  description="Kabar terbaru seputar pelaku budaya, tradisi, dan kegiatan Arsip Hidup Indonesia."
+  canonical={new URL('/berita', import.meta.env.PUBLIC_SITE_URL ?? 'https://arsiphidup.id').toString()}
+>
+  <section>
+    <h1>Berita</h1>
+    <ul>
+      {entries.map((entry) => (
+        <li>
+          <h2>
+            <a href={`/${resolveEditorialSlug(entry.id, entry.data.slug)}`}>{entry.data.judul}</a>
+          </h2>
+          <p>{entry.data.meta_description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

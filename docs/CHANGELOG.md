@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.6a — navigasi utama, indeks Cerita dan Berita, serta koreksi beranda — 31 Agustus 2026
+
+Navigasi utama kini memuat sembilan item tanpa dropdown. Pada layar sempit, menu memakai elemen native `<details>` dan `<summary>` tanpa JavaScript; pada layar lebar, tautan ditampilkan mendatar. Jelajah sengaja dikeluarkan karena spesifikasinya berubah menjadi peta sebaran wilayah dan belum final.
+
+Dua rute indeks baru mendaftar masing-masing lima entri Cerita dan Berita beserta keterangannya. Urutan indeks Berita mengikuti nama berkas karena frontmatter tidak memiliki field tanggal. Beranda juga dikoreksi dengan mengganti label angka ketiga menjadi “Proyek”, teks tombol menjadi “Baca cerita”, dan tujuan “Jelajahi arsip” menjadi `/koleksi`.
+
 ## T2.0c — `llms.txt` kondisional untuk staging — 31 Agustus 2026
 
 `llms.txt` dipindahkan dari berkas publik statis ke endpoint prerender kondisional agar staging tidak mengundang model bahasa dan mesin jawaban mengutip konten uji yang seluruhnya fiktif. Dengan `PUBLIC_STAGING=1`, endpoint hanya menyatakan bahwa situs merupakan lingkungan uji dan isinya tidak boleh dikutip; tanpa flag tersebut, isi produksi dipertahankan tanpa perubahan.
