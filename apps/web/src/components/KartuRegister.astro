@@ -3,6 +3,8 @@
  * Elemen signature (DESIGN §3) sekaligus blok paling mudah dikutip mesin jawaban (GEO §4).
  * Dirender sebagai <dl> — data katalog, bukan hiasan.
  */
+import '../styles/kartu-register.css';
+
 export interface Props {
   nomorArsip: string; direkamTanggal: string; direkamTempat: string;
   durasi: string; bahasa: string[]; narasumber: string;
@@ -19,15 +21,3 @@ const p = Astro.props;
   <div><dt>Hak</dt><dd>{p.hak}</dd></div>
   <div><dt>Akses</dt><dd>{p.akses}</dd></div>
 </dl>
-<style>
-  .kartu-register { border-top: 2px solid var(--wedelan); border-bottom: 1px solid var(--wedelan);
-    box-sizing: border-box; width: 100%; min-width: 0; padding: var(--s4) 0; display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--s2) var(--s5); }
-  .kartu-register div { display: flex; gap: var(--s3); min-width: 0; }
-  .kartu-register dt { color: var(--nila-muda); min-width: 100px; text-transform: uppercase; font-size: 12px; letter-spacing: .06em; }
-  .kartu-register dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-  @media (max-width: 480px) {
-    .kartu-register div { flex-direction: column; gap: var(--s1); }
-    .kartu-register dt { min-width: 0; }
-  }
-</style>
