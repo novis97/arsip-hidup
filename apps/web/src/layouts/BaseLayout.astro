@@ -74,7 +74,7 @@ const navigationItems = [
   <a href="#konten" class="skip">Lewati ke konten</a>
   <header class="site-header">
     <nav aria-label="Utama">
-      <details class="primary-navigation">
+      <details class="primary-navigation" open>
         <summary>Menu utama</summary>
         <ul>
           {navigationItems.map((item) => (
@@ -134,8 +134,7 @@ const navigationItems = [
       display: none;
     }
 
-    .primary-navigation > ul,
-    .primary-navigation:not([open]) > ul {
+    .primary-navigation > ul {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
