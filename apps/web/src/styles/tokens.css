@@ -21,6 +21,7 @@
   --s6: 32px;
   --s7: 48px;
   --s8: 64px;
+  --s9: 96px;
 }
 html {
   color-scheme: light;
@@ -32,6 +33,20 @@ body {
   font-size: 19px; /* DESIGN §2.2 — sebagian pembaca arsip lisan lansia */
   line-height: 1.7;
 }
+.page-content {
+  box-sizing: border-box;
+  max-width: 840px;
+  margin-inline: auto;
+  padding-inline: var(--s4);
+}
+.page-content > * + * {
+  margin-block-start: var(--s7);
+}
+@media (min-width: 768px) {
+  .page-content {
+    padding-inline: var(--s6);
+  }
+}
 h1,
 h2,
 h3 {
@@ -41,6 +56,18 @@ h3 {
 .mono {
   font-family: var(--font-mono);
   font-size: 14px;
+}
+dl.mono {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s6);
+}
+dl.mono > div {
+  display: grid;
+  gap: var(--s1);
+}
+dl.mono dd {
+  margin-inline-start: 0;
 }
 a {
   color: var(--wedelan);

@@ -1,8 +1,16 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.6d — container, padding, dan jarak antar seksi — 8 September 2026
+
+Token ruang `--s9: 96px` ditambahkan untuk melengkapi skala yang ditetapkan DESIGN §2.3 tanpa mengubah nilai token sebelumnya. Class `.page-content` kini membatasi hanya konten `<main>` pada `max-width: 840px` dengan posisi terpusat, `padding-inline: var(--s4)` pada layar sempit, `padding-inline: var(--s6)` mulai lebar 768px, dan jarak vertikal `var(--s7)` di antara anak langsung. Header, pita DATA UJI, dan footer tetap selebar viewport.
+
+`tokens.css` menjadi lokasi tunggal aturan CSS non-komponen, termasuk tata letak global dan baris statistik beranda. Blok `<style>` baru untuk aturan semacam ini tidak boleh ditambahkan ke `BaseLayout.astro` pada perubahan mendatang.
+
 ## T1.6a — navigasi utama, indeks Cerita dan Berita, serta koreksi beranda — 31 Agustus 2026
 
 Navigasi utama kini memuat sembilan item tanpa dropdown. Pada layar sempit, menu memakai elemen native `<details>` dan `<summary>` tanpa JavaScript; pada layar lebar, tautan ditampilkan mendatar. Jelajah sengaja dikeluarkan karena spesifikasinya berubah menjadi peta sebaran wilayah dan belum final.
+
+Elemen `<details>` memakai atribut `open` permanen karena konten `<details>` yang tertutup tidak dapat ditampilkan lewat CSS; konsekuensinya, menu terbuka secara bawaan di layar sempit dan tetap dapat ditutup oleh pengguna.
 
 Dua rute indeks baru mendaftar masing-masing lima entri Cerita dan Berita beserta keterangannya. Urutan indeks Berita mengikuti nama berkas karena frontmatter tidak memiliki field tanggal. Beranda juga dikoreksi dengan mengganti label angka ketiga menjadi “Proyek”, teks tombol menjadi “Baca cerita”, dan tujuan “Jelajahi arsip” menjadi `/koleksi`.
 
