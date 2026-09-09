@@ -6,7 +6,7 @@ import { test, expect } from "@playwright/test";
  */
 const DOMAIN_GOOGLE =
   /youtube\.com|ytimg\.com|googlevideo\.com|doubleclick\.net|google-analytics\.com|gstatic\.com/;
-const HALAMAN = "/koleksi/batik-tulis-pekalongan/seed-ratmi-01";
+const HALAMAN = "/arsip/seed-batik-tulis-pekalongan/seed-ratmi-01";
 
 test("nol request ke domain Google sebelum klik Play (RULES V-4)", async ({
   page,

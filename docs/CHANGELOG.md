@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.4a — label dinamis tombol mute — 8 September 2026
+
+Kontrol mute pemutar kini menyinkronkan status awal dan setiap perubahan dengan `player.isMuted()`. Saat suara aktif, tombol menampilkan ikon speaker dan bernama “Bisukan”; saat dibisukan, tombol menampilkan ikon speaker tercoret dan bernama “Nyalakan suara”. `aria-pressed` tetap menyatakan status mute saat ini, sedangkan `aria-label` menyatakan aksi yang akan dilakukan agar fungsi tombol disebutkan dengan tepat oleh pembaca layar.
+
+Bagian CC dari tiket dihentikan karena YouTube IFrame API resmi tidak menyediakan metode publik untuk menyalakan dan mematikan takarir sepenuhnya. Implementasi tidak memakai API captions yang tidak terdokumentasi.
+
 ## T1.6d-kartu-register — ekstraksi CSS Kartu Register — 8 September 2026
 
 Ekstraksi CSS komponen kini selesai: `tokens.css` tetap memuat CSS global, `player.css` memuat CSS komponen pemutar dari pekerjaan sebelumnya, dan `kartu-register.css` memuat CSS komponen Kartu Register pada tiket ini. `BaseLayout.astro` sekarang hanya berisi CSS untuk elemen yang direndernya secara langsung: header, nav, footer, dan pita staging.
