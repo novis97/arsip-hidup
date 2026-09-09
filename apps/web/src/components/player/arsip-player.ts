@@ -195,6 +195,7 @@ function wireControls(root: HTMLElement, player: any) {
   const seek = q("seek") as HTMLInputElement;
   const time = q("time");
   const rate = q("rate") as HTMLButtonElement;
+  const mute = q("mute") as HTMLButtonElement;
   const rates = [1, 1.25, 1.5, 0.75];
   let rateIdx = 0;
 
@@ -210,11 +211,17 @@ function wireControls(root: HTMLElement, player: any) {
   seek.addEventListener("input", () => {
     player.seekTo((Number(seek.value) / 1000) * player.getDuration(), true);
   });
-  (q("mute") as HTMLButtonElement).addEventListener("click", (e) => {
-    const b = e.currentTarget as HTMLButtonElement;
-    const muted = player.isMuted();
-    muted ? player.unMute() : player.mute();
-    b.setAttribute("aria-pressed", String(!muted));
+  const syncMuteControl = (muted: boolean) => {
+    mute.setAttribute("aria-pressed", String(muted));
+    mute.setAttribute("aria-label", muted ? "Nyalakan suara" : "Bisukan");
+    mute.textContent = muted ? "🔇" : "🔊";
+  };
+
+  syncMuteControl(player.isMuted());
+  mute.addEventListener("click", () => {
+    const nextMuted = !player.isMuted();
+    nextMuted ? player.mute() : player.unMute();
+    syncMuteControl(nextMuted);
   });
   (q("volume") as HTMLInputElement).addEventListener("input", (e) => {
     player.setVolume(Number((e.target as HTMLInputElement).value));
@@ -245,7 +252,7 @@ function wireControls(root: HTMLElement, player: any) {
         player.seekTo(Math.max(0, player.getCurrentTime() - 5), true),
       arrowup: () => player.setVolume(Math.min(100, player.getVolume() + 10)),
       arrowdown: () => player.setVolume(Math.max(0, player.getVolume() - 10)),
-      m: () => (q("mute") as HTMLButtonElement).click(),
+      m: () => mute.click(),
       f: () => (q("fs") as HTMLButtonElement).click(),
     };
     if (map[k]) {
