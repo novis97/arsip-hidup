@@ -20,6 +20,7 @@ import { ColorMapEntries } from "./src/collections/ColorMapEntries";
 import { AccessRequests } from "./src/collections/AccessRequests";
 import { AccessGrants } from "./src/collections/AccessGrants";
 import { AuditLogs } from "./src/collections/AuditLogs";
+import { auditEndpoint } from "./src/endpoints/audit";
 import { mediaEndpoints } from "./src/endpoints/mediaPlayback";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -70,7 +71,7 @@ export default buildConfig({
     AuditLogs,
   ],
 
-  endpoints: [...mediaEndpoints],
+  endpoints: [auditEndpoint, ...mediaEndpoints],
 
   plugins: [
     s3Storage({

@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.4b — endpoint telemetri pemutaran anonim — 10 September 2026
+
+Endpoint `POST /api/audit` ditambahkan untuk menerima telemetri pemutaran anonim dari situs statis. Endpoint hanya menerima `video.play` dan `video.complete`; whitelist ini mencegah pengunjung anonim menyuntikkan peristiwa keamanan atau keputusan tata kelola palsu ke AuditLogs. Penulisan dibatasi hingga 60 event per IP per 60 detik, cukup untuk lonjakan interaksi pemutar yang wajar sambil membatasi banjir tulis anonim ke SQLite.
+
+Tiket ini dipicu oleh temuan bahwa audit pemutaran gagal senyap sejak awal: pemutar mengirim `sendBeacon` ke `/api/audit`, tetapi endpoint tersebut tidak pernah ada. Endpoint baru meneruskan IP dan user-agent ke `writeAudit()` agar hanya hash aktor bersalt yang disimpan, serta menandai rekaman sebagai telemetri retensi `short`.
+
 ## T1.4a — label dinamis tombol mute — 8 September 2026
 
 Kontrol mute pemutar kini menyinkronkan status awal dan setiap perubahan dengan `player.isMuted()`. Saat suara aktif, tombol menampilkan ikon speaker dan bernama “Bisukan”; saat dibisukan, tombol menampilkan ikon speaker tercoret dan bernama “Nyalakan suara”. `aria-pressed` tetap menyatakan status mute saat ini, sedangkan `aria-label` menyatakan aksi yang akan dilakukan agar fungsi tombol disebutkan dengan tepat oleh pembaca layar.
