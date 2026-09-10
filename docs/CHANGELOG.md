@@ -1,5 +1,9 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.5b — perbaiki `uploadDate` pada `VideoObject` — 10 September 2026
+
+Google Rich Results Test menemukan bahwa `uploadDate` hilang dari JSON-LD karena implementasi merujuk `publishedAt`, field yang tidak ada di skema `ArchiveItems`. `uploadDate` sekarang memakai `recordedAt` dan diformat sebagai ISO 8601. Tanggal rekam merupakan pendekatan yang lebih jujur daripada `createdAt` atau `updatedAt` otomatis Payload, karena kedua field otomatis tersebut mencatat tanggal seed dijalankan, bukan tanggal video.
+
 ## T1.5 — ArchiveComponent, Person kondisional, dan BreadcrumbList halaman arsip — 10 September 2026
 
 Halaman arsip kini menambahkan `ArchiveComponent` dengan metadata yang benar-benar tampil di halaman dan `holdingArchive` yang menunjuk node global `#organization`, serta `BreadcrumbList` dengan jenjang Beranda, judul proyek, dan judul arsip. Node `Collection` induk turut didefinisikan agar referensi `isPartOf` milik `VideoObject` dan `ArchiveComponent` tidak menggantung.

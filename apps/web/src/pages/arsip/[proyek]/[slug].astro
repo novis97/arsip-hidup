@@ -106,7 +106,7 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
   name: judulTampil,
   description: ringkasanTampil,
   thumbnailUrl: [item.thumbnailUrl],
-  uploadDate: item.publishedAt,
+  uploadDate: new Date(item.recordedAt).toISOString(),
   duration: durasiISO,
   // VIDEO_EMBED §7 / RULES V-12: contentUrl TIDAK dicantumkan untuk aset terbatas.
   ...(item.accessTier === 'public' && item.videoSource === 'youtube'
