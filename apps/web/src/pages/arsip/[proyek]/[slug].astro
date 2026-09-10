@@ -86,10 +86,18 @@ const durasiPanjang = [
 ].filter(Boolean).join(' ');
 
 const durasiISO = `PT${Math.floor(item.durationSeconds / 60)}M${item.durationSeconds % 60}S`;
-const narasumberSchema = {
+const collectionId = `${site}/arsip/${item.collection.slug}#collection`;
+const bolehTampilkanPerson = nama?.displayConsent === 'full_name';
+const narasumberSchema = bolehTampilkanPerson ? [{
   '@type': 'Person',
   '@id': `${canonical}#narasumber`,
   name: namaTampil,
+}] : [];
+
+const collectionSchema = {
+  '@type': 'Collection',
+  '@id': collectionId,
+  name: item.collection.title,
 };
 
 const videoSchema = item.videoSource === 'none' ? [] : [{
@@ -106,15 +114,55 @@ const videoSchema = item.videoSource === 'none' ? [] : [{
     : {}),
   transcript: transkripTampil ?? undefined,
   inLanguage: item.language,
-  creator: { '@id': `${canonical}#narasumber` },
-  isPartOf: { '@id': `${site}/arsip/${item.collection.slug}#collection` },
+  ...(bolehTampilkanPerson
+    ? { creator: { '@id': `${canonical}#narasumber` } }
+    : {}),
+  isPartOf: { '@id': collectionId },
   publisher: { '@id': `${site}/#organization` },
   isAccessibleForFree: item.accessTier === 'public',
   ...(item.accessTier === 'restricted'
     ? { conditionsOfAccess: 'Akses melalui permohonan riset. Lihat /terlibat/akses-arsip.' }
     : {}),
 }];
-const jsonLdSchema = [narasumberSchema, ...videoSchema];
+
+const archiveComponentSchema = {
+  '@type': 'ArchiveComponent',
+  '@id': `${canonical}#archive-component`,
+  name: judulTampil,
+  identifier: item.archiveNumber,
+  dateCreated: item.recordedAt,
+  locationCreated: { '@type': 'Place', name: item.recordedPlace },
+  inLanguage: item.language,
+  isAccessibleForFree: item.accessTier === 'public',
+  ...(item.accessTier === 'restricted'
+    ? { conditionsOfAccess: 'Akses melalui permohonan riset. Lihat /terlibat/akses-arsip.' }
+    : {}),
+  isPartOf: { '@id': collectionId },
+  holdingArchive: { '@id': `${site}/#organization` },
+};
+
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  '@id': `${canonical}#breadcrumb`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Beranda', item: `${site}/` },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: item.collection.title,
+      item: `${site}/arsip/${item.collection.slug}`,
+    },
+    { '@type': 'ListItem', position: 3, name: judulTampil, item: canonical },
+  ],
+};
+
+const jsonLdSchema = [
+  ...narasumberSchema,
+  collectionSchema,
+  ...videoSchema,
+  archiveComponentSchema,
+  breadcrumbSchema,
+];
 ---
 <BaseLayout
   title={`${judulTampil} — Arsip Hidup Indonesia`}

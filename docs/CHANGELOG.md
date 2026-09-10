@@ -1,5 +1,11 @@
 # CHANGELOG — Blueprint Arsip Hidup Indonesia
 
+## T1.5 — ArchiveComponent, Person kondisional, dan BreadcrumbList halaman arsip — 10 September 2026
+
+Halaman arsip kini menambahkan `ArchiveComponent` dengan metadata yang benar-benar tampil di halaman dan `holdingArchive` yang menunjuk node global `#organization`, serta `BreadcrumbList` dengan jenjang Beranda, judul proyek, dan judul arsip. Node `Collection` induk turut didefinisikan agar referensi `isPartOf` milik `VideoObject` dan `ArchiveComponent` tidak menggantung.
+
+Node `Person` sekarang hanya diterbitkan ketika `displayConsent === 'full_name'`. Properti `VideoObject.creator` mengikuti syarat yang sama dan dihilangkan untuk consent `initials` atau `anonymous`; mempertahankan referensi tersebut tanpa node `Person` akan menghasilkan `@id` menggantung, sedangkan menggantinya dengan bentuk `Person` lain tetap melanggar batas consent. `BreadcrumbList` untuk 33 halaman editorial sengaja ditunda ke tiket terpisah dan `[...slug].astro` tidak disentuh.
+
 ## T1.4b — endpoint telemetri pemutaran anonim — 10 September 2026
 
 Endpoint `POST /api/audit` ditambahkan untuk menerima telemetri pemutaran anonim dari situs statis. Endpoint hanya menerima `video.play` dan `video.complete`; whitelist ini mencegah pengunjung anonim menyuntikkan peristiwa keamanan atau keputusan tata kelola palsu ke AuditLogs. Penulisan dibatasi hingga 60 event per IP per 60 detik, cukup untuk lonjakan interaksi pemutar yang wajar sambil membatasi banjir tulis anonim ke SQLite.
